@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "ShalaDarpan Quick",
+  "version": "0.1.0",
+  "description": "Quick actions for ShalaDarpan quirks",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/index.js"],
+      "matches": ["https://*/*"]
+    }
+  ]
+}
