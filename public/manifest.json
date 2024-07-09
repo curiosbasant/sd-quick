@@ -3,9 +3,13 @@
   "name": "ShalaDarpan Quick",
   "version": "0.1.0",
   "description": "Quick actions for ShalaDarpan quirks",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "contextMenus", "scripting"],
   "action": {
     "default_popup": "index.html"
+  },
+  "background": {
+    "type": "module",
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {

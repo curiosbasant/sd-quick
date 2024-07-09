@@ -8,6 +8,11 @@ function handleMessage(message) {
   console.log(message)
   if (message.action === 'tc-list') {
     filterTableByDate(new Date(message.payload.date))
+  } else if (message.action === 'mark-all-present') {
+    const selects = /** @type {NodeListOf<HTMLSelectElement>} */ (
+      document.querySelectorAll('#ContentPlaceHolder1_grd_NMMSApplicationFilled select')
+    )
+    selects.forEach((s) => (s.value = '0'))
   }
 }
 
