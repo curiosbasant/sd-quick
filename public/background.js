@@ -2,9 +2,7 @@
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-    documentUrlPatterns: [
-      'https://rajshaladarpan.nic.in/SD3/Home/School/Staff_DailyAttendanceEntry.aspx',
-    ],
+    documentUrlPatterns: ['https://rajshaladarpan.nic.in/*/Staff_DailyAttendanceEntry.aspx'],
     id: 'mark-all-present',
     title: 'Mark all present',
   })
@@ -21,7 +19,7 @@ function handleContextMenuClick(info, tab) {
 }
 
 /**
- * @type {Record<string, (info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => void>}
+ * @satisfies {Record<string, (info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => void>}
  */
 const menuItemHandlers = {
   async 'mark-all-present'(info) {
