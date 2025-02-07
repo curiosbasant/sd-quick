@@ -1,3 +1,7 @@
 {
+  "cSpell.words": ["nativewind"],
+  "files.associations": {
+    "src/global.css": "tailwindcss"
+  },
   "typescript.tsdk": "node_modules/typescript/lib"
 }
