@@ -18,6 +18,6 @@ type PostBody = {
 
 export async function POST(req: Request) {
   const { list }: PostBody = await req.json()
-
+console.log({ list })
   return Response.json({ hello: 'world' })
 }

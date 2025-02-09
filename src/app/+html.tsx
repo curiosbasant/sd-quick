@@ -7,18 +7,17 @@ import type { PropsWithChildren } from 'react'
 // do not have access to the DOM or browser APIs.
 export default function Root(props: PropsWithChildren) {
   return (
-    <html className='h-[36rem] w-96 rounded-lg overflow-hidden' lang='en'>
+    <html className='h-[36rem] w-96 rounded-lg overflow-hidden border' lang='en'>
       <head>
         <meta charSet='utf-8' />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
         <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no' />
-        {process.env.EXT && <base href='https://sd-quick.expo.app' />}
 
         {/*
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
         */}
-        <ScrollViewStyleReset />
+        {/* <ScrollViewStyleReset /> */}
 
         {/* Add any additional <head> elements that you want globally available on web... */}
       </head>

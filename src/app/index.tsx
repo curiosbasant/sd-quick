@@ -1,9 +1,19 @@
-import { Image } from 'react-native'
+import { Link } from 'expo-router'
+import { dispatchAction } from '~/utils'
 
 export default function HomePage() {
   return (
-    <div className='bg-pink-500 p-4'>
-      <Image source={require('~/assets/images/icon.png')} />
-    </div>
+    <ul className='bg-lime-500 p-4'>
+      <li>
+        <Link href='/students/profile'>Student Profile</Link>
+      </li>
+      <button
+        onClick={() => {
+          console.log('clicked')
+          dispatchAction({ type: 'hello' })
+        }}>
+        Click Me
+      </button>
+    </ul>
   )
 }

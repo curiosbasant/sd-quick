@@ -3,7 +3,7 @@
   "name": "ShalaDarpan Quick",
   "version": "0.1.0",
   "description": "Quick actions for ShalaDarpan quirks",
-  "permissions": ["activeTab", "contextMenus", "scripting"],
+  "permissions": ["activeTab", "contextMenus", "scripting", "tabs"],
   "action": {
     "default_popup": "server/index.html"
   },
@@ -13,8 +13,8 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/index.js"],
-      "matches": ["https://*/*"]
+      "js": ["content-script.js"],
+      "matches": ["https://rajshaladarpan.rajasthan.gov.in/*"]
     }
   ]
 }
