@@ -2,7 +2,7 @@
   "conventionalCommits.promptBody": false,
   "conventionalCommits.promptFooter": false,
   "conventionalCommits.promptScopes": false,
-  "cSpell.words": ["nativewind"],
+  "cSpell.words": ["ShalaDarpan", "nativewind"],
   "files.associations": {
     "src/global.css": "tailwindcss"
   },
