@@ -1,20 +1,18 @@
 {
+  "$schema": "https://json.schemastore.org/chrome-manifest",
   "manifest_version": 3,
   "name": "ShalaDarpan Quick",
   "version": "0.1.0",
   "description": "Quick actions for ShalaDarpan quirks",
   "permissions": ["activeTab", "contextMenus", "scripting"],
-  "action": {
-    "default_popup": "index.html"
-  },
-  "background": {
-    "type": "module",
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
-      "js": ["scripts/index.js"],
-      "matches": ["https://*/*"]
+      "js": ["scripts/staff-attendance.js"],
+      "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/Staff_DailyAttendanceEntry.aspx"]
+    },
+    {
+      "js": ["scripts/tc-list.js"],
+      "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/SchoolTcReport.aspx"]
     }
   ]
 }

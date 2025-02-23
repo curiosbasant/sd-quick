@@ -3,6 +3,8 @@
   "main": "expo-router/entry",
   "version": "0.1.0",
   "scripts": {
+    "ext:build": "node scripts/extension-bundle.mjs",
+    "ext:watch": "node scripts/extension-bundle.mjs",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -42,6 +44,7 @@
     "@types/node": "^20.14.0",
     "@types/react": "~18.3.12",
     "@types/react-dom": "~18.3.1",
+    "esbuild": "^0.25.0",
     "nativewind": "^4.1.23",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"
