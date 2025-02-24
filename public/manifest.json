@@ -11,6 +11,14 @@
       "matches": ["https://rajshaladarpan.rajasthan.gov.in/*"]
     },
     {
+      "js": ["scripts/login.js"],
+      "matches": [
+        "https://rajshaladarpan.rajasthan.gov.in/*/OfficeLoginNew.aspx",
+        "https://rajshaladarpan.rajasthan.gov.in/*/stafflogin.aspx"
+      ],
+      "world": "MAIN"
+    },
+    {
       "js": ["scripts/staff-attendance.js"],
       "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/Staff_DailyAttendanceEntry.aspx"]
     },
