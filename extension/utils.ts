@@ -6,3 +6,7 @@ export function setFormElementValue<T extends HTMLInputElement | HTMLSelectEleme
   const elem = elements.namedItem(name) as T | null
   elem && (elem.value = typeof value === 'function' ? value(elem) : value)
 }
+
+export function repeatUntil(cb: (done: () => void) => unknown, interval = 5e3) {
+  const intervalId = setInterval(cb, interval, () => clearInterval(intervalId))
+}
