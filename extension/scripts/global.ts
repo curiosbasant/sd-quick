@@ -30,3 +30,14 @@ document.title = (() => {
 
   return title ? `${title} | ShalaDarpan` : 'ShalaDarpan'
 })()
+
+// Force dropdown menu links in single line, so it don't push others
+document.querySelectorAll<HTMLAnchorElement>('#ulmenu1 .padd').forEach((a) => {
+  a.style.display = '-webkit-box'
+  a.style.webkitBoxOrient = 'vertical'
+  a.style.webkitLineClamp = '1'
+  a.style.overflow = 'hidden'
+  a.style.padding = '3px 0 3px 20px'
+
+  a.textContent && (a.title = a.textContent.trim())
+})
