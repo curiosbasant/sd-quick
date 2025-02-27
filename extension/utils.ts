@@ -30,3 +30,12 @@ export function setFavicon(url: string) {
   favicon.href = url
   return favicon
 }
+
+export function makeSdRequest(url = location.href) {
+  const fd = new FormData(document.querySelector<HTMLFormElement>('#form1') ?? undefined)
+
+  return fetch(url, {
+    method: 'POST',
+    body: new URLSearchParams(fd as unknown as string),
+  })
+}
