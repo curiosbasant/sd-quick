@@ -10,3 +10,18 @@ export function setFormElementValue<T extends HTMLInputElement | HTMLSelectEleme
 export function repeatUntil(cb: (done: () => void) => unknown, interval = 5e3) {
   const intervalId = setInterval(cb, interval, () => clearInterval(intervalId))
 }
+
+export function setFavicon(url: string) {
+  const favicon =
+    document.querySelector<HTMLLinkElement>('#favicon') ??
+    (() => {
+      const link = document.createElement('link')
+      link.id = 'favicon'
+      link.rel = 'shortcut icon'
+      link.type = 'image/png'
+      return document.head.appendChild(link)
+    })()
+
+  favicon.href = url
+  return favicon
+}
