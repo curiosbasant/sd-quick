@@ -31,6 +31,10 @@
       "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/Staff_DailyAttendanceEntry.aspx"]
     },
     {
+      "js": ["scripts/staff-leave-process.js"],
+      "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/Staff_LeaveApproval.aspx"]
+    },
+    {
       "js": ["scripts/student-daily-attendance.js"],
       "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/StudentDailypresence.aspx"],
       "world": "MAIN"
