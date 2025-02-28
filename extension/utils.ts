@@ -1,10 +1,14 @@
 export function setFormElementValue<T extends HTMLInputElement | HTMLSelectElement | RadioNodeList>(
   elements: HTMLFormControlsCollection,
-  name: string,
+  name: string | string[],
   value: string | ((elem: T) => string)
 ) {
+  const resolveValue = (name: string) => {
   const elem = elements.namedItem(name) as T | null
   elem && (elem.value = typeof value === 'function' ? value(elem) : value)
+  }
+
+  typeof name === 'string' ? resolveValue(name) : name.forEach(resolveValue)
 }
 
 export function repeatUntil(cb: (done: () => void) => unknown, interval = 5e3) {
