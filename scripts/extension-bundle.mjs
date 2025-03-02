@@ -7,7 +7,7 @@ const options = {
   bundle: true,
   write: true,
   // target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
-  outdir: 'dist',
+  outdir: 'dist/scripts',
   plugins: [
     {
       name: 'copy-manifest',
