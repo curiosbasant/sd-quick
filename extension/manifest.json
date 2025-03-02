@@ -23,6 +23,10 @@
       "world": "MAIN"
     },
     {
+      "js": ["scripts/monthly-wifs-entry.js"],
+      "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/RMSA_SChoolMonthly_NP_tablets.aspx"]
+    },
+    {
       "js": ["scripts/result-entry.js"],
       "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/StudentAccess_MarksEnter_School.aspx"]
     },
