@@ -1,4 +1,4 @@
-import { downloadFile } from '../../src/utils'
+import { downloadFile } from '../utils'
 
 const downloadCsvButton = document
   .querySelector('#ContentPlaceHolder1_bt_PrintPreview')
