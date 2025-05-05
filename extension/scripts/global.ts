@@ -36,7 +36,7 @@ document.title = (() => {
   const title =
     // Get the title from the active breadcrumb or from the page title
     document.querySelector('ol.breadcrumb li.active, .box_heading h2')?.textContent?.trim() ??
-    // Get the last pathname segment
+    // Get the last pathname segment from url
     location.pathname.split('/').at(-1)?.slice(0, -5)
 
   return title ? `${title} | ShalaDarpan` : 'ShalaDarpan'

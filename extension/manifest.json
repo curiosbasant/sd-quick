@@ -31,6 +31,10 @@
       "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/StudentAccess_MarksEnter_School.aspx"]
     },
     {
+      "js": ["scripts/sa-entry.js"],
+      "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/StudentAssessmentN2020.aspx"]
+    },
+    {
       "js": ["scripts/staff-attendance.js"],
       "matches": ["https://rajshaladarpan.rajasthan.gov.in/*/Staff_DailyAttendanceEntry.aspx"]
     },
