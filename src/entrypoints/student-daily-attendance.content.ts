@@ -1,5 +1,3 @@
-import { makeSdRequest, randomBetween } from '~/utils'
-
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/StudentDailypresence.aspx'],
   world: 'MAIN',

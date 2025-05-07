@@ -1,5 +1,3 @@
-import { randomBetween, setFormElementValue } from '~/utils'
-
 const favs: Record<string, string[]> = {
   ctl00$ContentPlaceHolder1$txtkhel: [
     'कबड्डी',

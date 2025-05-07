@@ -1,5 +1,3 @@
-import { randomBetween, repeatUntil } from '~/utils'
-
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/StudentAccess_MarksEnter_School.aspx'],
   main() {

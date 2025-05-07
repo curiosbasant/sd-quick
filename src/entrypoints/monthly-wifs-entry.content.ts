@@ -1,5 +1,3 @@
-import { randomBetween } from '~/utils'
-
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/RMSA_SChoolMonthly_NP_tablets.aspx'],
   main() {

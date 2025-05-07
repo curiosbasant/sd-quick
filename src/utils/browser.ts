@@ -4,20 +4,11 @@ export function setFormElementValue<T extends HTMLInputElement | HTMLSelectEleme
   value: string | ((elem: T) => string)
 ) {
   const resolveValue = (name: string) => {
-  const elem = elements.namedItem(name) as T | null
-  elem && (elem.value = typeof value === 'function' ? value(elem) : value)
+    const elem = elements.namedItem(name) as T | null
+    elem && (elem.value = typeof value === 'function' ? value(elem) : value)
   }
 
   typeof name === 'string' ? resolveValue(name) : name.forEach(resolveValue)
-}
-
-export function repeatUntil(cb: (done: () => void) => unknown, interval = 5e3) {
-  const intervalId = setInterval(cb, interval, () => clearInterval(intervalId))
-}
-
-export function randomBetween(min: number, max: number) {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 export function setFavicon(url: string) {

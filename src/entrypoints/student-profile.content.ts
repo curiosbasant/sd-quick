@@ -1,5 +1,3 @@
-import { downloadFile } from '~/utils'
-
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/SchoolStudentProfiles_New.aspx'],
   main() {

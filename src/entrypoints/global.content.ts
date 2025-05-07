@@ -1,5 +1,3 @@
-import { setFavicon, setFormElementValue } from '~/utils'
-
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*'],
   main() {

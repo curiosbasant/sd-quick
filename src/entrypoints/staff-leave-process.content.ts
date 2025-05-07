@@ -1,5 +1,3 @@
-import { repeatUntil } from '~/utils'
-
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/Staff_LeaveApproval.aspx'],
   main() {
