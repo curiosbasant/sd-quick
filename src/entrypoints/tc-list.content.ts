@@ -1,33 +1,38 @@
-const panel = document.querySelector('.panel-body:has(#ContentPlaceHolder1_Button1)')
-if (panel) {
-  const row = panel.appendChild(document.createElement('div'))
-  row.classList.add('row')
-  row.innerHTML = `
-    <style>
-      .filter-row {
-        display: none;
-      }
-      .box_content:has(#ContentPlaceHolder1_grdSummary) .filter-row {
-        margin-top: 2rem;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        align-items: center;
-        gap: 1rem;
-      }
-    </style>
-    <div class="filter-row">
-      <span class="control-label">Filter By Date</span>
-      <input class="form-control" type="date">
-      <button class="btn btn-primary btn-sm" type="button">Filter</button>
-    </div>
-  `
+export default defineContentScript({
+  matches: ['https://rajshaladarpan.rajasthan.gov.in/*/SchoolTcReport.aspx'],
+  main() {
+    const panel = document.querySelector('.panel-body:has(#ContentPlaceHolder1_Button1)')
+    if (panel) {
+      const row = panel.appendChild(document.createElement('div'))
+      row.classList.add('row')
+      row.innerHTML = `
+        <style>
+          .filter-row {
+            display: none;
+          }
+          .box_content:has(#ContentPlaceHolder1_grdSummary) .filter-row {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            align-items: center;
+            gap: 1rem;
+          }
+        </style>
+        <div class="filter-row">
+          <span class="control-label">Filter By Date</span>
+          <input class="form-control" type="date">
+          <button class="btn btn-primary btn-sm" type="button">Filter</button>
+        </div>
+      `
 
-  row.querySelector('button')?.addEventListener('click', (ev) => {
-    const button = ev.currentTarget as HTMLButtonElement
-    const input = button.previousElementSibling as HTMLInputElement
-    input && filterTableByDate(new Date(input.value))
-  })
-}
+      row.querySelector('button')?.addEventListener('click', (ev) => {
+        const button = ev.currentTarget as HTMLButtonElement
+        const input = button.previousElementSibling as HTMLInputElement
+        input && filterTableByDate(new Date(input.value))
+      })
+    }
+  },
+})
 
 function filterTableByDate(filterDate: Date) {
   const tbody = document.querySelector<HTMLTableElement>('#ContentPlaceHolder1_grdSummary tbody')

@@ -1,21 +1,7 @@
 {
-  "extends": "expo/tsconfig.base",
-
+  "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "strict": true,
-    "paths": {
-      "~/*": ["./src/*"],
-      "~/assets/*": ["./assets/*"]
-    }
-  },
-
-  "include": [
-    "extension/**/*.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "nativewind-env.d.ts"
-  ]
+    "allowImportingTsExtensions": true,
+    "jsx": "react-jsx"
+  }
 }
