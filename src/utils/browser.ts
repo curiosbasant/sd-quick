@@ -26,15 +26,6 @@ export function setFavicon(url: string) {
   return favicon
 }
 
-export function makeSdRequest(url = location.href) {
-  const fd = new FormData(document.querySelector<HTMLFormElement>('#form1') ?? undefined)
-
-  return fetch(url, {
-    method: 'POST',
-    body: new URLSearchParams(fd as unknown as string),
-  })
-}
-
 const extensionToMimeType = {
   csv: 'text/csv',
   txt: 'text/plain',
@@ -58,4 +49,23 @@ export function downloadFile(content: string, fileName: `${string}.${FileExtensi
   document.body.removeChild(aTag)
 
   URL.revokeObjectURL(fileUrl)
+}
+
+export function printContent(...content: (Node | string)[]) {
+  const printPopup = window.open(
+    '',
+    '',
+    'left=2,top=0,toolbar=0,scrollbars=1,status=1;width=350,height=250'
+  )
+
+  if (printPopup) {
+    printPopup.document.body.style.zoom = '0.9'
+    printPopup.document.body.append(...content)
+    printPopup.document.close()
+    setTimeout(() => {
+      printPopup.focus()
+      printPopup.print()
+      printPopup.close()
+    }, 100)
+  }
 }
