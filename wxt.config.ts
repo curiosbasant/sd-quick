@@ -12,4 +12,8 @@ export default defineConfig({
     // prevent auto opening the browser
     disabled: true,
   },
+  zip: {
+    // Zipped file name
+    artifactTemplate: '{{name}}-v{{version}}-{{browser}}.zip',
+  },
 })
