@@ -1,3 +1,5 @@
+import { parseHtmlString } from './parsers'
+
 export function makeSdRequest(url = location.href, payload = {}) {
   const fd = new FormData(document.querySelector<HTMLFormElement>('#form1') ?? undefined)
 
@@ -14,8 +16,4 @@ export function makeSdRequest(url = location.href, payload = {}) {
 export function resolveDocument(res: Response) {
   if (res.ok) return res.text().then(parseHtmlString)
   throw new Error('Response not okay!')
-}
-
-export function parseHtmlString(text: string) {
-  return new DOMParser().parseFromString(text, 'text/html')
 }

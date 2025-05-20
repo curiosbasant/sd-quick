@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.5",
