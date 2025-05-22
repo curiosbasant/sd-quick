@@ -5,15 +5,13 @@ on:
     tags: [v*.*.*]
 
 jobs:
-  build-zip-release:
+  create-release:
     permissions:
-      contents: write
+      contents: write # to be able to publish a GitHub release
     runs-on: ubuntu-latest
-    env:
-      EXTENSION_NAME: ${{ github.ref_name }}.zip
     steps:
-      # Setup environment
-      - uses: actions/checkout@v4
+      - name: Setup Environment
+        uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
           run_install: |
@@ -23,21 +21,17 @@ jobs:
           node-version: '>=20.11'
           cache: 'pnpm'
 
-      # Build extension
       - name: Build and Zip Chrome extension
         run: pnpm run zip
 
       # Prepare for github release with the zipped artifact
-      - name: Create GitHub Release
-        id: create_release
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          name: Release notes for ${{ github.ref_name }}
           body: |
             Auto-generated release for tag ${{ github.ref_name }}
           files: .output/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
