@@ -1,16 +1,20 @@
 {
   "name": "sd-quick",
   "description": "Quick actions for ShalaDarpan quirks",
-  "version": "0.1.1",
+  "version": "0.0.0-semantic-release",
   "type": "module",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
-    "zip": "wxt zip",
+    "release": "semantic-release",
+    "release:dry": "semantic-release --dry-run --no-ci",
+    "release:local": "semantic-release --no-ci",
+    "zip:chrome": "wxt zip -b chrome",
+    "zip:edge": "wxt zip -b edge",
     "zip:firefox": "wxt zip -b firefox",
-    "compile": "tsc --noEmit",
+    "lint": "tsc --noEmit",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
@@ -19,10 +23,13 @@
     "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
+    "@semantic-release/exec": "^7.1.0",
     "@tailwindcss/vite": "^4.1.5",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.3",
     "@wxt-dev/module-react": "^1.1.3",
+    "conventional-changelog-conventionalcommits": "^9.0.0",
+    "semantic-release": "^24.2.4",
     "tailwindcss": "^4.1.5",
     "typescript": "^5.8.3",
     "wxt": "^0.20.6"

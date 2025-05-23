@@ -2,12 +2,14 @@ name: Release
 
 on:
   push:
-    tags: [v*.*.*]
+    branches: [main]
 
 jobs:
   create-release:
     permissions:
       contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
     runs-on: ubuntu-latest
     steps:
       - name: Setup Environment
@@ -21,17 +23,8 @@ jobs:
           node-version: '>=20.11'
           cache: 'pnpm'
 
-      - name: Build and Zip Chrome extension
-        run: pnpm run zip
-
       # Prepare for github release with the zipped artifact
       - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release notes for ${{ github.ref_name }}
-          body: |
-            Auto-generated release for tag ${{ github.ref_name }}
-          files: .output/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm run release

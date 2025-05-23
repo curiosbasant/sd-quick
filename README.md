@@ -1,3 +1,9 @@
+<p align="end">
+   <a href="https://semantic-release.gitbook.io">
+    <img alt="semantic-release: angular" src="https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release">
+  </a>
+</p>
+
 # ![alt text](public/icon/32.png) ShalaDarpan Quick
 
 This is a browser extension for ShalaDarpan website. It has various utility buttons/functions to make the website experience more seamless.
