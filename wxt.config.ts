@@ -3,6 +3,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
+  autoIcons: {
+    grayscaleOnDevelopment: false,
+  },
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {
       if (wxt.config.mode === 'development') {
@@ -18,7 +21,7 @@ export default defineConfig({
     short_name: 'SD Quick',
     author: { email: 'basantbrpl@gmail.com' },
   }),
-  modules: ['@wxt-dev/module-react'],
+  modules: ['@wxt-dev/auto-icons', '@wxt-dev/module-react'],
   srcDir: 'src',
   vite: () => ({
     plugins: [tailwindcss()],
