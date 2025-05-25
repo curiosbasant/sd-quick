@@ -15,6 +15,11 @@ export default defineContentScript({
       return title ? `${title} | ShalaDarpan` : 'ShalaDarpan'
     })()
 
+    // Prevent annoying login page always being opening in new tab
+    document
+      .querySelectorAll('.loginMenu .dropdown-item')
+      .forEach((a) => a.removeAttribute('target'))
+
     // Force dropdown menu links in single line, so it don't push others
     document.querySelectorAll<HTMLAnchorElement>('#ulmenu1 .padd').forEach((a) => {
       a.style.display = '-webkit-box'
@@ -40,7 +45,7 @@ function setGlobalDefaults() {
       'ctl00$ContentPlaceHolder1$footer2$ddlsession', // StudentAttendence
     ],
     (select) => {
-      const lastOption = select.lastElementChild
+      const lastOption = select.lastElementChild // Get the current session
       return lastOption && 'value' in lastOption ? (lastOption.value as string) : ''
     }
   )
