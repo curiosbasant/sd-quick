@@ -5,14 +5,13 @@ export default defineContentScript({
     'https://rajshaladarpan.rajasthan.gov.in/*/OfficeLoginNew.aspx',
     'https://rajshaladarpan.rajasthan.gov.in/*/stafflogin.aspx',
   ],
-  world: 'MAIN',
   main() {
     const captchaInput = document.querySelector<HTMLInputElement>(
       '#bodyContent_txt_Captchaname, #txt_Captchaname'
     )
     if (!captchaInput) return
 
-    // Remove annoying alert message for input captcha on blur
+    // Remove annoying alert message on blur for empty captcha input
     captchaInput.removeAttribute('onblur')
 
     const img = document.querySelector<HTMLImageElement>('#bodyContent_Img2')

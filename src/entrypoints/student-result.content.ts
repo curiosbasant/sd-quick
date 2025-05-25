@@ -9,13 +9,13 @@ export default defineContentScript({
       // The students tables
       anchor: '#ContentPlaceHolder1_grd_Student tr:nth-child(2)',
       onMount: () => {
-        const printButton = document.createElement('button')
-        printButton.classList.add('btn', 'btn-primary')
+        const printButton = createButton({
+          className: 'btn btn-primary',
+          onClick: handlePrintingAllResults,
+        })
         printButton.setAttribute('style', 'border-color:transparent;outline:none')
-        printButton.type = 'button'
         printButton.innerHTML =
           '<div><img src="Content/images/Print.png" title="Print"> Print All Results</div>'
-        printButton.addEventListener('click', handlePrintingAllResults)
         document.getElementById('ContentPlaceHolder1_divlist')?.prepend(printButton)
         return printButton
       },
@@ -58,11 +58,11 @@ function getVerifiedStudentFormNames() {
 }
 
 async function getResultFor(studentPrintButtonName: string) {
-  const a = await makeSdRequest(location.href, {
+  const doc = await makeSdRequest(location.href, {
     [studentPrintButtonName]: 'Print Result',
   })
   // This is the printable content
-  const div = a.querySelector<HTMLDivElement>('#div_print6_10')
+  const div = doc.querySelector<HTMLDivElement>('#div_print6_10')
   if (!div) return '<p>Session Out</p>'
 
   div.removeAttribute('id') // not necessary

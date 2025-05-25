@@ -1,16 +1,10 @@
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/Staff_DailyAttendanceEntry.aspx'],
   main() {
-    const markAllPresentButton = document.createElement('button')
-    markAllPresentButton.type = 'button'
-    markAllPresentButton.textContent = 'Mark All Present'
-    markAllPresentButton.className = 'btn btn-primary'
-    markAllPresentButton.addEventListener('click', () => {
-      document
-        .querySelectorAll<HTMLSelectElement>(
-          '#ContentPlaceHolder1_grd_NMMSApplicationFilled select'
-        )
-        .forEach((s) => (s.value = '0'))
+    const markAllPresentButton = createButton({
+      className: 'btn btn-primary',
+      children: 'Mark All Present',
+      onClick: handleMarkAllPresent,
     })
 
     const styles = document.createElement('style')
@@ -32,3 +26,9 @@ export default defineContentScript({
     document.getElementsByClassName('box_heading')[0]?.append(markAllPresentButton, styles)
   },
 })
+
+function handleMarkAllPresent() {
+  document
+    .querySelectorAll<HTMLSelectElement>('#ContentPlaceHolder1_grd_NMMSApplicationFilled select')
+    .forEach((s) => (s.value = '0'))
+}

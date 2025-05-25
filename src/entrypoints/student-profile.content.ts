@@ -1,35 +1,36 @@
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/SchoolStudentProfiles_New.aspx'],
   main() {
-    const downloadCsvButton = document
-      .querySelector('#ContentPlaceHolder1_bt_PrintPreview')
-      ?.parentElement?.appendChild(document.createElement('button'))
-    if (downloadCsvButton) {
-      downloadCsvButton.type = 'button'
-      downloadCsvButton.textContent = 'Download CSV'
-      downloadCsvButton.classList.add('btn', 'btn-primary')
-      downloadCsvButton.addEventListener('click', () => {
-        const rows = document.querySelectorAll<HTMLTableRowElement>(
-          '#ContentPlaceHolder1_grdStudentProfile tr'
-        )
-        const csvContent = [...rows]
-          .map((tr) => [...tr.children].map((td) => td.textContent?.trim()).join(','))
-          .join('\n')
+    const container = document.querySelector('#ContentPlaceHolder1_bt_PrintPreview')?.parentElement
+    if (container) {
+      const downloadCsvButton = createButton({
+        className: 'btn btn-primary',
+        children: 'Download CSV',
+        onClick: () => {
+          const rows = document.querySelectorAll<HTMLTableRowElement>(
+            '#ContentPlaceHolder1_grdStudentProfile tr'
+          )
+          const csvContent = [...rows]
+            .map((tr) => [...tr.children].map((td) => td.textContent?.trim()).join(','))
+            .join('\n')
 
-        downloadFile(csvContent, 'students-profile.csv')
+          downloadFile(csvContent, 'students-profile.csv')
+        },
       })
+      container.appendChild(downloadCsvButton)
     }
 
     const rightContainer =
       document.querySelector('.box_heading h2')?.parentElement?.nextElementSibling
     if (rightContainer) {
       rightContainer.setAttribute('style', 'display:flex;justify-content:flex-end;')
-      const printButton = rightContainer.appendChild(document.createElement('button'))
-      printButton.classList.add('btn', 'btn-default', 'btn-xs')
+      const printButton = createButton({
+        className: 'btn btn-default btn-xs',
+        onClick: handlePrint,
+      })
       printButton.setAttribute('style', 'border-color:transparent;outline:none')
-      printButton.type = 'button'
       printButton.innerHTML = '<img src="Content/images/Print.png" title="Print" >'
-      printButton.addEventListener('click', handlePrint)
+      rightContainer.appendChild(printButton)
     }
   },
 })
@@ -51,32 +52,32 @@ function handlePrint(ev: MouseEvent) {
   }
 
   content.appendChild(document.createElement('style')).textContent = `
-        #ContentPlaceHolder1_head, #div_Class_Section {
-          display: block;
-          width: 100%;
-        }
-        #ContentPlaceHolder1_today_Date {
-          float: right;
-          font-size: 8pt;
-          font-weight: bold;
-        }
-        .box-title {
-          text-align: center;
-          width: 100%;
-        }
-        table {
-          border: 1px;
-          border-collapse: collapse;
-          width: 100%;
-          font-size: 10pt;
-          padding: 0;
-          border-spacing: 0;
-        }
-        table th, table td {
-          border: 1px solid #000;
-          padding: 8px;
-        }
-      `
+    #ContentPlaceHolder1_head, #div_Class_Section {
+      display: block;
+      width: 100%;
+    }
+    #ContentPlaceHolder1_today_Date {
+      float: right;
+      font-size: 8pt;
+      font-weight: bold;
+    }
+    .box-title {
+      text-align: center;
+      width: 100%;
+    }
+    table {
+      border: 1px;
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 10pt;
+      padding: 0;
+      border-spacing: 0;
+    }
+    table th, table td {
+      border: 1px solid #000;
+      padding: 8px;
+    }
+  `
 
   // remove high specificity styling
   content
