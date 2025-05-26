@@ -3,8 +3,9 @@
   "conventionalCommits.promptFooter": false,
   "conventionalCommits.promptScopes": false,
   "cSpell.words": ["conventionalcommits", "ShalaDarpan"],
-  "files.associations": {
-    "src/global.css": "tailwindcss"
+  "tailwindCSS.classFunctions": ["(.+).classList.(add|remove)"],
+  "tailwindCSS.experimental.configFile": {
+    "src/assets/tailwind.css": "src/entrypoints/*.content.ts"
   },
   "typescript.tsdk": "node_modules/typescript/lib"
 }

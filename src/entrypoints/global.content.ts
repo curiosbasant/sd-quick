@@ -1,3 +1,5 @@
+import '~/assets/tailwind.css'
+
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*'],
   main() {
