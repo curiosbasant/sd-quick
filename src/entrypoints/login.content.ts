@@ -11,6 +11,11 @@ export default defineContentScript({
       cardContainer.setAttribute('style', 'max-width:32rem')
     }
 
+    // Fix, make captcha a bit bigger
+    document
+      .querySelector('#bodyContent_Img2, #Img2')
+      ?.setAttribute('style', 'width:75%;margin:auto')
+
     const captchaInput = document.querySelector<HTMLInputElement>(
       '#bodyContent_txt_Captchaname, #txt_Captchaname'
     )
