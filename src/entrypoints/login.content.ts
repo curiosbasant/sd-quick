@@ -4,12 +4,19 @@ export default defineContentScript({
     'https://rajshaladarpan.rajasthan.gov.in/*/stafflogin.aspx',
   ],
   main() {
+    // Fix, login card size on medium screens
+    const cardContainer = document.querySelector('div:has(>.card)')
+    if (cardContainer) {
+      cardContainer.removeAttribute('class')
+      cardContainer.setAttribute('style', 'max-width:32rem')
+    }
+
     const captchaInput = document.querySelector<HTMLInputElement>(
       '#bodyContent_txt_Captchaname, #txt_Captchaname'
     )
-    if (!captchaInput) return
-
+    if (captchaInput) {
     // Remove annoying alert message on blur for empty captcha input
     captchaInput.removeAttribute('onblur')
+    }
   },
 })
