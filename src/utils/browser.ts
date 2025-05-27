@@ -1,3 +1,41 @@
+export function observeElementPresence<Result extends Element>(
+  options: {
+    /** To get the element from the @link{target} */
+    selector: string
+    /** The non-changing container to observe into, its dom should not update on new requests */
+    target?: Element | string | null
+    signal?: AbortSignal
+  },
+  cb: (elem: Result | null) => void
+) {
+  let prevResult: Result | null = null
+  const target =
+    (typeof options.target === 'string'
+      ? document.querySelector(options.target)
+      : options.target) ?? document
+  const handleChanges = () => {
+    if (options.signal?.aborted) return
+
+    const element = target.querySelector<Result>(options.selector)
+    if (prevResult !== element) cb(element)
+    prevResult = element
+  }
+  handleChanges() // Immediately invoking
+
+  const observer = new MutationObserver(handleChanges)
+  observer.observe(target, {
+    subtree: true, // observe all descendants
+    childList: true, // observe adding/removing of elements
+    // disable observing unnecessary details
+    attributes: false,
+    characterData: false,
+  })
+
+  const cleanUpFn = () => observer.disconnect()
+  options.signal?.addEventListener('abort', cleanUpFn, { once: true })
+  return cleanUpFn
+}
+
 export function setFormElementValue<T extends HTMLInputElement | HTMLSelectElement | RadioNodeList>(
   elements: HTMLFormControlsCollection,
   name: string | string[],
