@@ -1,8 +1,11 @@
 import '~/assets/tailwind.css'
 
+import { ContentScriptContext } from 'wxt/utils/content-script-context'
+
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*'],
-  main() {
+  main(ctx) {
+    setSessionRefreshInterval(ctx)
     setGlobalDefaults()
     setFavicon('/SD1/Home/Public2/assets/img/home-icon.png')
     autoDetectTabTitle()
@@ -34,6 +37,28 @@ export default defineContentScript({
     })
   },
 })
+
+function setSessionRefreshInterval(ctx: ContentScriptContext) {
+  let intervalId = 0
+  const signalObj = { signal: ctx.signal }
+  // refresh every 5 minutes to avoid session timeout
+  const handleOnline = () => {
+    intervalId = window.setInterval(() => {
+      requestIdleCallback(
+        () => fetch(`${getCurrentSdSegment()}/Home/School/Home_New.aspx`, signalObj),
+        { timeout: 5 * 1000 } // 5sec
+      )
+    }, 5 * 60 * 1000) // 5min
+  }
+  const handleOffline = () => {
+    clearInterval(intervalId)
+  }
+
+  if (navigator.onLine) handleOnline()
+  ctx.onInvalidated(handleOffline)
+  addEventListener('online', handleOnline, signalObj)
+  addEventListener('offline', handleOffline, signalObj)
+}
 
 function setGlobalDefaults() {
   const formElements = document.querySelector<HTMLFormElement>('#form1')?.elements
