@@ -1,23 +1,28 @@
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/Staff_LeaveApproval.aspx'],
-  main() {
-    repeatUntil((done) => {
-      const trs = document.querySelectorAll<HTMLTableRowElement>(
-        '#ContentPlaceHolder1_grdLeaveDetails tr:has(td)'
-      )
-      if (!trs.length) return
+  main(ctx) {
+    observeElementPresence<HTMLTableElement>(
+      {
+        selector: '#ContentPlaceHolder1_grdLeaveDetails',
+        target: '#ContentPlaceHolder1_UpdatePanel1',
+        signal: ctx.signal,
+      },
+      (table) => {
+        if (!table) return
 
-      trs.forEach((tr) => {
-        const checkbox = tr.children[0].firstElementChild as HTMLInputElement
-        const select = tr.children[8].firstElementChild as HTMLSelectElement
-        select.addEventListener('change', () => {
-          // Trigger the checkbox, if status has changed
-          if (checkbox.checked === (select.value === '99')) {
-            checkbox.click()
+        const trs = table.querySelectorAll<HTMLTableRowElement>('tr:nth-child(n+2)')
+        trs.forEach((tr) => {
+          const checkbox = tr.children[0].firstElementChild as HTMLInputElement
+          const statusInput = tr.children[8].firstElementChild as HTMLSelectElement
+          const handleLeaveStatusChange = () => {
+            // Trigger the checkbox, if status has changed
+            if (checkbox.checked === (statusInput.value === '99')) {
+              checkbox.click()
+            }
           }
+          statusInput.addEventListener('change', handleLeaveStatusChange, { signal: ctx.signal })
         })
-      })
-      done()
-    })
+      }
+    )
   },
 })
