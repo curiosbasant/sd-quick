@@ -1,27 +1,63 @@
-import { observeElementPresence } from '~/utils/browser'
+import { observeElementPresence, observeShiftKey } from '~/utils/browser'
 
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/Staff_LeaveApproval.aspx'],
   main(ctx) {
+    const signalObj = { signal: ctx.signal }
+    const handleLeaveStatusChange = (ev: Event) => {
+      const statusSelect = ev.currentTarget as HTMLSelectElement
+      const checkbox = statusSelect.parentElement?.parentElement?.firstElementChild
+        ?.firstElementChild as HTMLInputElement
+      // ☑️ check checkbox on status change
+      if (checkbox?.checked === (statusSelect.value === '99')) {
+        checkbox.click()
+      }
+    }
+
     observeElementPresence<HTMLTableElement>({
       selector: '#ContentPlaceHolder1_grdLeaveDetails',
       target: '#ContentPlaceHolder1_UpdatePanel1',
       signal: ctx.signal,
       onPresenceChange(table) {
         if (!table) return
+        // We will handle the first select input differently
+        const [firstSelect, ...restSelects] = table.querySelectorAll<HTMLSelectElement>(
+          'tr:nth-child(n+2) select'
+        )
 
-        const trs = table.querySelectorAll<HTMLTableRowElement>('tr:nth-child(n+2)')
-        trs.forEach((tr) => {
-          const checkbox = tr.children[0].firstElementChild as HTMLInputElement
-          const statusInput = tr.children[8].firstElementChild as HTMLSelectElement
-          const handleLeaveStatusChange = () => {
-            // Trigger the checkbox, if status has changed
-            if (checkbox.checked === (statusInput.value === '99')) {
-              checkbox.click()
+        for (const statusSelect of restSelects) {
+          statusSelect.dataset.shiftTarget = ''
+          statusSelect.addEventListener('input', handleLeaveStatusChange, signalObj)
+        }
+
+        // This is to handle the css styling by focusing/highlighting all the inputs
+        const shiftKey = observeShiftKey({
+          onPress(pressed) {
+            if (pressed) {
+              firstSelect.dataset.shiftTrigger = ''
+            } else {
+              delete firstSelect.dataset.shiftTrigger
             }
-          }
-          statusInput.addEventListener('change', handleLeaveStatusChange, { signal: ctx.signal })
+          },
+          signal: ctx.signal,
         })
+        const handleFirstLeaveStatusChange = (ev: Event) => {
+          // Handle first input normally if shift is not pressed
+          if (!shiftKey.pressed) return handleLeaveStatusChange(ev)
+
+          // Click check-all checkbox
+          const checkAllCheckbox = table.querySelector<HTMLInputElement>(
+            '#ContentPlaceHolder1_grdLeaveDetails_chkAll'
+          )!
+          checkAllCheckbox.checked = false // so it can be checked again
+          checkAllCheckbox.click()
+          // Set the same value for all the inputs as in the first input
+          for (const statusSelect of restSelects) {
+            statusSelect.value = (ev.currentTarget as HTMLSelectElement).value
+          }
+        }
+
+        firstSelect.addEventListener('input', handleFirstLeaveStatusChange, signalObj)
       },
     })
   },

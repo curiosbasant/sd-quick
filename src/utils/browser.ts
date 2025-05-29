@@ -35,6 +35,28 @@ export function observeElementPresence<Result extends Element>(options: {
   return cleanUpFn
 }
 
+export function observeShiftKey(options?: {
+  onPress?: (pressed: boolean) => void
+  signal?: AbortSignal
+}) {
+  const state = {
+    pressed: false,
+    disconnect() {
+      document.removeEventListener('keydown', handleKeyChange)
+      document.removeEventListener('keyup', handleKeyChange)
+    },
+  }
+  const handleKeyChange = (ev: KeyboardEvent) => {
+    if (state.pressed === ev.shiftKey) return
+    options?.onPress?.(ev.shiftKey)
+    state.pressed = ev.shiftKey
+  }
+
+  document.addEventListener('keydown', handleKeyChange, options)
+  document.addEventListener('keyup', handleKeyChange, options)
+  return state
+}
+
 export function setFormElementValue<T extends HTMLInputElement | HTMLSelectElement | RadioNodeList>(
   elements: HTMLFormControlsCollection,
   name: string | string[],

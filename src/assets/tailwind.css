@@ -1,3 +1,10 @@
 @import 'tailwindcss' prefix(tw) source(none);
 @source '../entrypoints/*.content.ts';
 @source '../utils/elements.ts';
+
+table:has([data-shift-trigger]:where(:hover, :focus-visible))
+  :where([data-shift-trigger], [data-shift-target]) {
+  border-color: #66afe9;
+  outline: 0;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #66afe999;
+}
