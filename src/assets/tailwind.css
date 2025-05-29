@@ -1,4 +1,4 @@
-@import 'tailwindcss' prefix(tw) source(none);
+@import 'tailwindcss' prefix(tw) source(none) important;
 @source '../entrypoints/*.content.ts';
 @source '../utils/elements.ts';
 

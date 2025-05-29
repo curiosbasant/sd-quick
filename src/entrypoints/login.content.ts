@@ -7,14 +7,12 @@ export default defineContentScript({
     // Fix, login card size on medium screens
     const cardContainer = document.querySelector('div:has(>.card)')
     if (cardContainer) {
-      cardContainer.removeAttribute('class')
-      cardContainer.setAttribute('style', 'max-width:32rem')
+      cardContainer.className = 'tw:max-w-lg'
     }
 
     // Fix, make captcha a bit bigger
-    document
-      .querySelector('#bodyContent_Img2, #Img2')
-      ?.setAttribute('style', 'width:75%;margin:auto')
+    const captchaImg = document.querySelector('#bodyContent_Img2, #Img2')
+    captchaImg && (captchaImg.className = 'tw:w-3/4 tw:m-auto')
 
     const captchaInput = document.querySelector<HTMLInputElement>(
       '#bodyContent_txt_Captchaname, #txt_Captchaname'

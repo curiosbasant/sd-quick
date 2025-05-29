@@ -1,37 +1,48 @@
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/SchoolStudentProfiles_New.aspx'],
-  main() {
-    const container = document.querySelector('#ContentPlaceHolder1_bt_PrintPreview')?.parentElement
-    if (container) {
-      const downloadCsvButton = createButton({
-        className: 'btn btn-primary',
-        children: 'Download CSV',
-        onClick: () => {
-          const rows = document.querySelectorAll<HTMLTableRowElement>(
-            '#ContentPlaceHolder1_grdStudentProfile tr'
-          )
-          const csvContent = [...rows]
-            .map((tr) => [...tr.children].map((td) => td.textContent?.trim()).join(','))
-            .join('\n')
+  main(ctx) {
+    const ui = createIntegratedUi(ctx, {
+      position: 'inline',
+      anchor: '#ContentPlaceHolder1_grdStudentProfile:has(tr:nth-child(4))',
+      onMount() {
+        const rightContainer =
+          document.querySelector('.box_heading h2')?.parentElement?.nextElementSibling
+        if (!rightContainer) return
+        rightContainer.classList.add('tw:flex', 'tw:justify-end', 'tw:gap-4')
 
-          downloadFile(csvContent, 'students-profile.csv')
-        },
-      })
-      container.appendChild(downloadCsvButton)
-    }
+        const downloadCsvButton = createButton({
+          className:
+            'btn btn-default btn-xs tw:border-transparent tw:outline-none tw:text-4xl tw:opacity-90 tw:-mb-1 fa fa-download',
+          title: 'Download CSV',
+          onClick: () => {
+            const rows = document.querySelectorAll<HTMLTableRowElement>(
+              '#ContentPlaceHolder1_grdStudentProfile tr'
+            )
+            const csvContent = [...rows]
+              .map((tr) => [...tr.children].map((td) => td.textContent?.trim()).join(','))
+              .join('\n')
 
-    const rightContainer =
-      document.querySelector('.box_heading h2')?.parentElement?.nextElementSibling
-    if (rightContainer) {
-      rightContainer.setAttribute('style', 'display:flex;justify-content:flex-end;')
-      const printButton = createButton({
-        className: 'btn btn-default btn-xs',
-        onClick: handlePrint,
-      })
-      printButton.setAttribute('style', 'border-color:transparent;outline:none')
-      printButton.innerHTML = '<img src="Content/images/Print.png" title="Print" >'
-      rightContainer.appendChild(printButton)
-    }
+            downloadFile(csvContent, 'students-profile.csv')
+          },
+          signal: ctx.signal,
+        })
+
+        const printButton = createButton({
+          className: 'btn btn-default btn-xs tw:border-transparent tw:outline-none',
+          title: 'Print',
+          onClick: handlePrint,
+          signal: ctx.signal,
+        })
+        printButton.innerHTML = '<img src="Content/images/Print.png" >'
+        rightContainer.replaceChildren(downloadCsvButton, printButton)
+        return rightContainer
+      },
+      onRemove(rightContainer) {
+        rightContainer?.replaceChildren()
+      },
+    })
+
+    ui.autoMount()
   },
 })
 
