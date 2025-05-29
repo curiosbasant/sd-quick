@@ -1,14 +1,13 @@
-export function observeElementPresence<Result extends Element>(
-  options: {
+export function observeElementPresence<Result extends Element>(options: {
     /** To get the element from the @link{target} */
     selector: string
-    /** The non-changing container to observe into, its dom should not update on new requests */
+  /** Trigger every time the selector element changes */
+  onPresenceChange: (element: Result | null) => void
+  /** The non-changing container to observe from, the element should not update on new requests @default document */
     target?: Element | string | null
     signal?: AbortSignal
-  },
-  cb: (elem: Result | null) => void
-) {
-  let prevResult: Result | null = null
+}) {
+  let previousResult: Result | null = null
   const target =
     (typeof options.target === 'string'
       ? document.querySelector(options.target)
@@ -17,8 +16,8 @@ export function observeElementPresence<Result extends Element>(
     if (options.signal?.aborted) return
 
     const element = target.querySelector<Result>(options.selector)
-    if (prevResult !== element) cb(element)
-    prevResult = element
+    if (previousResult !== element) options.onPresenceChange(element)
+    previousResult = element
   }
   handleChanges() // Immediately invoking
 

@@ -3,14 +3,12 @@ import { observeElementPresence } from '~/utils/browser'
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/StudentAccess_MarksEnter_School.aspx'],
   main(ctx) {
-    observeElementPresence<HTMLTableElement>(
-      {
-        target: '#ContentPlaceHolder1_up_pnl',
-        // making sure table has at-least 2 rows
-        selector: 'table:has(tr:nth-child(2))',
-        signal: ctx.signal,
-      },
-      (table) => {
+    observeElementPresence<HTMLTableElement>({
+      target: '#ContentPlaceHolder1_up_pnl',
+      // making sure table has at-least 2 rows
+      selector: 'table:has(tr:nth-child(2))',
+      signal: ctx.signal,
+      onPresenceChange(table) {
         if (!table) return
 
         // Make the tabbing go vertically not horizontally
@@ -41,8 +39,8 @@ export default defineContentScript({
             }
             th.appendChild(generateInputs(handleGeneration))
           })
-      }
-    )
+      },
+    })
   },
 })
 

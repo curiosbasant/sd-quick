@@ -1,13 +1,13 @@
+import { observeElementPresence } from '~/utils/browser'
+
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/Staff_LeaveApproval.aspx'],
   main(ctx) {
-    observeElementPresence<HTMLTableElement>(
-      {
-        selector: '#ContentPlaceHolder1_grdLeaveDetails',
-        target: '#ContentPlaceHolder1_UpdatePanel1',
-        signal: ctx.signal,
-      },
-      (table) => {
+    observeElementPresence<HTMLTableElement>({
+      selector: '#ContentPlaceHolder1_grdLeaveDetails',
+      target: '#ContentPlaceHolder1_UpdatePanel1',
+      signal: ctx.signal,
+      onPresenceChange(table) {
         if (!table) return
 
         const trs = table.querySelectorAll<HTMLTableRowElement>('tr:nth-child(n+2)')
@@ -22,7 +22,7 @@ export default defineContentScript({
           }
           statusInput.addEventListener('change', handleLeaveStatusChange, { signal: ctx.signal })
         })
-      }
-    )
+      },
+    })
   },
 })
