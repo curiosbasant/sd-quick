@@ -15,8 +15,6 @@ stats-*.json
 web-ext.config.ts
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
 .idea
 .DS_Store
 *.suo
@@ -44,3 +42,5 @@ lerna-debug.log*
 
 app-example
 archive
+*.archive
+*.archive.*

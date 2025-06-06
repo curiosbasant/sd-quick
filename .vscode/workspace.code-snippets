@@ -1,0 +1,16 @@
+{
+  "Generates a Content Script": {
+    "prefix": "script",
+		"scope": "typescript,javascript",
+    "body": [
+      "export default defineContentScript({",
+      "  matches: ['https://rajshaladarpan.rajasthan.gov.in/*/$1.aspx'],",
+      "  main(ctx) {",
+      "    $2",
+      "  },",
+      "})",
+      ""
+    ],
+    "description": "Generates a Content Script"
+  }
+}
