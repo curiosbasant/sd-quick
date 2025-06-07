@@ -128,3 +128,14 @@ export function printContent(...content: (Node | string)[]) {
     }, 100)
   }
 }
+
+export function scrapeTable(selector: string, doc = document) {
+  const rows = doc.querySelectorAll<HTMLTableRowElement>(selector + ' tr')
+  return [...rows].map((tr) =>
+    [...tr.children].map((td) =>
+      td.firstElementChild?.matches('select, input')
+        ? (td.firstElementChild as HTMLInputElement).value
+        : td.textContent?.trim() || ''
+    )
+  )
+}

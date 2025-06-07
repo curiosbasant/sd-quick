@@ -13,9 +13,17 @@ export default defineContentScript({
     // add popup login for session expired blank pages
     if (document.body.children.length === 0) {
       const p = document.body.appendChild(document.createElement('p'))
+      p.className =
+        'tw:p-8 tw:m-4 tw:bg-rose-100 tw:border tw:border-s-6 tw:text-rose-500 tw:border-s-rose-500 tw:border-rose-200 tw:rounded-sm'
       p.append(
-        'Oops! Your session has expired unexpectedly, please ',
-        createButton({ children: 'Login', onClick: handlePopupLogin }),
+        'Oops! Your session has been expired unexpectedly, please ',
+        createButton({
+          className:
+            'tw:text-blue-600 tw:font-bold tw:hover:cursor-pointer tw:hover:underline tw:decoration-blue-400',
+          children: 'Login',
+          onClick: handlePopupLogin,
+          signal: ctx.signal,
+        }),
         ' again to continue!'
       )
     }
