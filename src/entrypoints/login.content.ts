@@ -1,3 +1,5 @@
+import { getCurrentSdSegment } from '~/utils/browser'
+
 export default defineContentScript({
   matches: [
     'https://rajshaladarpan.rajasthan.gov.in/*/OfficeLoginNew.aspx',

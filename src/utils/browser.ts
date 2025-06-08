@@ -129,6 +129,11 @@ export function printContent(...content: (Node | string)[]) {
   }
 }
 
+/** @returns /SD{1-4} */
+export function getCurrentSdSegment() {
+  return location.pathname.slice(0, 4)
+}
+
 export function scrapeTable(selector: string, doc = document) {
   const rows = doc.querySelectorAll<HTMLTableRowElement>(selector + ' tr')
   return [...rows].map((tr) =>

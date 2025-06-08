@@ -1,3 +1,5 @@
+import { createButton } from '~/utils'
+
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/Staff_DailyAttendanceEntry.aspx'],
   main() {

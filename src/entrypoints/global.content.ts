@@ -1,6 +1,7 @@
 import '~/assets/tailwind.css'
 
 import { ContentScriptContext } from 'wxt/utils/content-script-context'
+import { createButton, getCurrentSdSegment, setFavicon, setFormElementValue } from '~/utils'
 
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*'],
@@ -109,7 +110,7 @@ function autoDetectTabTitle() {
 
 function handlePopupLogin() {
   const popup = window.open(
-    `${location.pathname.slice(0, 4)}/Home/Public2/OfficeLoginNew.aspx`,
+    `${getCurrentSdSegment()}/Home/Public2/OfficeLoginNew.aspx`,
     'popup-login',
     'popup=1,toolbar=0,location=0,menubar=0,scrollbars=1,status=1,width=500,height=650'
   )

@@ -1,4 +1,4 @@
-import { observeElementPresence } from '~/utils/browser'
+import { createButton, observeElementPresence, randomBetween } from '~/utils'
 
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/StudentAccess_MarksEnter_School.aspx'],

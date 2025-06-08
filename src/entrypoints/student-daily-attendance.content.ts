@@ -1,3 +1,5 @@
+import { makeSdRequest, randomBetween } from '~/utils'
+
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/StudentDailypresence.aspx'],
   world: 'MAIN',
@@ -54,7 +56,7 @@ async function handleInputBlur(ev: FocusEvent) {
   tempDiv.remove()
   const res = await promise
   // Set tr backgroundColor
-  input.parentElement!.parentElement!.style.backgroundColor = res.ok ? 'green' : 'red'
+  input.parentElement!.parentElement!.style.backgroundColor = res ? 'green' : 'red'
 
   // Calculate and set total
   const boyInput = input.parentElement?.previousElementSibling

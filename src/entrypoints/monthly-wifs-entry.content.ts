@@ -1,4 +1,4 @@
-import { createButton } from '~/utils/elements'
+import { createButton, randomBetween } from '~/utils'
 
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/RMSA_SChoolMonthly_NP_tablets.aspx'],
@@ -23,7 +23,7 @@ export default defineContentScript({
 })
 
 function handleAutoFill() {
-  document.querySelectorAll('.table.gridview tr:has(input)').forEach((tr) => {
+  for (const tr of document.querySelectorAll('.table.gridview tr:has(input)')) {
     const randomFill = (start: number) => {
       const studentCount = +(tr.children[start]?.firstElementChild as HTMLInputElement)?.value
       const moreConsumption = randomBetween(Math.max(0, studentCount - 3), studentCount)
@@ -37,5 +37,5 @@ function handleAutoFill() {
     randomFill(2) // Girls
     ;(tr.children[21].lastElementChild as HTMLSelectElement).value = '1'
     ;(tr.children[22].lastElementChild as HTMLSelectElement).value = '1'
-  })
+  }
 }
