@@ -123,7 +123,7 @@ export default defineContentScript({
     })
     autoFillButton.setAttribute(
       'style',
-      'position: relative; margin-top: -8rem; z-index: 10; margin-left: 2rem;'
+      'position: relative; margin-top: -8rem; z-index: 10; margin-left: 2rem;',
     )
 
     document
@@ -151,7 +151,7 @@ function handleAutoFill() {
 
   const classHeightWeight = heightWeight[0]
   const classAverageHeight = Math.round(
-    (classHeightWeight.height_cm[0] + classHeightWeight.height_cm[1]) / 2
+    (classHeightWeight.height_cm[0] + classHeightWeight.height_cm[1]) / 2,
   )
   // सह-शैक्षिक गतिविधियां आकलन विवरण (SA-1)
   if (selectedValue === '01') {
@@ -159,13 +159,13 @@ function handleAutoFill() {
     setFormElementValue(
       formElements,
       'ctl00$ContentPlaceHolder1$txtstartlength',
-      randomBetween(classHeightWeight.height_cm[0], classAverageHeight).toString()
+      randomBetween(classHeightWeight.height_cm[0], classAverageHeight).toString(),
     )
     // session start weight in kg
     setFormElementValue(
       formElements,
       'ctl00$ContentPlaceHolder1$txtstartweight',
-      randomBetween(...classHeightWeight.weight_kg).toString()
+      randomBetween(...classHeightWeight.weight_kg).toString(),
     )
     return
   }
@@ -175,13 +175,13 @@ function handleAutoFill() {
     setFormElementValue(
       formElements,
       'ctl00$ContentPlaceHolder1$txtendlength',
-      randomBetween(classAverageHeight, classHeightWeight.height_cm[1]).toString()
+      randomBetween(classAverageHeight, classHeightWeight.height_cm[1]).toString(),
     )
     // session end weight in kg
     setFormElementValue(
       formElements,
       'ctl00$ContentPlaceHolder1$txtendweight',
-      randomBetween(...classHeightWeight.weight_kg).toString()
+      randomBetween(...classHeightWeight.weight_kg).toString(),
     )
 
     setFormElementValue(
@@ -191,7 +191,7 @@ function handleAutoFill() {
         'ctl00$ContentPlaceHolder1$rbtnsharvan', // hearing correct
         'ctl00$ContentPlaceHolder1$ddlregulatippni', // regularity
       ],
-      '1'
+      '1',
     )
     // randomly select blood group and fav color
     setFormElementValue<HTMLSelectElement>(
@@ -200,18 +200,18 @@ function handleAutoFill() {
         'ctl00$ContentPlaceHolder1$ddlbloodgroup', // blood group
         'ctl00$ContentPlaceHolder1$ddlcolor', // fav color
       ],
-      (elem) => randomBetween(1, elem.options.length - 1).toString()
+      (elem) => randomBetween(1, elem.options.length - 1).toString(),
     )
 
     // set random favorites
     setFormElementValue<HTMLInputElement>(
       formElements,
       Object.keys(favs),
-      (elem) => favs[elem.name][randomBetween(0, favs[elem.name].length - 1)]
+      (elem) => favs[elem.name][randomBetween(0, favs[elem.name].length - 1)],
     )
 
     const feedbackCheckboxes = document.querySelectorAll<HTMLInputElement>(
-      '#ContentPlaceHolder1_ddlsafeedback input[type="checkbox"]'
+      '#ContentPlaceHolder1_ddlsafeedback input[type="checkbox"]',
     )
     if (feedbackCheckboxes.length > 0) {
       // randomly check 4-5 checkboxes
@@ -227,17 +227,17 @@ function handleAutoFill() {
 
   // Fill the grade and class level
   const entryRows = document.querySelectorAll(
-    '#ContentPlaceHolder1_grdItemEntry tr:has(input[type="text"])'
+    '#ContentPlaceHolder1_grdItemEntry tr:has(input[type="text"])',
   )
   if (entryRows.length === 0) return
 
   const classValue = parseInt(
-    document.querySelector('#ContentPlaceHolder1_lblheading :nth-child(3)')?.textContent || '0'
+    document.querySelector('#ContentPlaceHolder1_lblheading :nth-child(3)')?.textContent || '0',
   )
   const grade = (
-    (entryRows[0].children[3].firstElementChild as HTMLInputElement)?.value ||
-    prompt('Enter grade') ||
-    ''
+    (entryRows[0].children[3].firstElementChild as HTMLInputElement)?.value
+    || prompt('Enter grade')
+    || ''
   ).toUpperCase()
   entryRows.forEach((tr) => {
     const classLevelInput = tr.children[2].firstElementChild as HTMLInputElement

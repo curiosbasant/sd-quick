@@ -22,7 +22,7 @@ export default defineContentScript({
         .home_boxes:not(:has(#ContentPlaceHolder1_divStaffList)) .box_heading > button {
           display: none;
         }
-      `)
+      `),
     )
 
     document.getElementsByClassName('box_heading')[0]?.append(markAllPresentButton, styles)

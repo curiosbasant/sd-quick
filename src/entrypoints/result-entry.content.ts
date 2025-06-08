@@ -23,17 +23,17 @@ export default defineContentScript({
             // Get headers that has input fields
             [
               ...table.querySelectorAll<HTMLTableCellElement>(
-                'tr:nth-child(2) td:has(input[type="number"])'
+                'tr:nth-child(2) td:has(input[type="number"])',
               ), // select all inputs from 2nd row
             ]
               .map((td) => `tr:first-child th:nth-child(${td.cellIndex + 1})`)
-              .join(',')
+              .join(','),
           )
           .forEach((th) => {
             const handleGeneration = (min: number, max: number) => {
               table
                 .querySelectorAll<HTMLInputElement>(
-                  `.home_boxes tr td:nth-child(${th.cellIndex + 1}) > input`
+                  `.home_boxes tr td:nth-child(${th.cellIndex + 1}) > input`,
                 )
                 .forEach((inp) => (inp.value = randomBetween(min, max).toString()))
             }

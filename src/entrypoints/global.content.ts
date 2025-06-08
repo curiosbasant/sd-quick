@@ -25,7 +25,7 @@ export default defineContentScript({
           onClick: handlePopupLogin,
           signal: ctx.signal,
         }),
-        ' again to continue!'
+        ' again to continue!',
       )
     }
 
@@ -52,12 +52,15 @@ function setSessionRefreshInterval(ctx: ContentScriptContext) {
   const signalObj = { signal: ctx.signal }
   // refresh every 5 minutes to avoid session timeout
   const handleOnline = () => {
-    intervalId = window.setInterval(() => {
-      requestIdleCallback(
-        () => fetch(`${getCurrentSdSegment()}/Home/School/Home_New.aspx`, signalObj),
-        { timeout: 5 * 1000 } // 5sec
-      )
-    }, 5 * 60 * 1000) // 5min
+    intervalId = window.setInterval(
+      () => {
+        requestIdleCallback(
+          () => fetch(`${getCurrentSdSegment()}/Home/School/Home_New.aspx`, signalObj),
+          { timeout: 5 * 1000 }, // 5sec
+        )
+      },
+      5 * 60 * 1000,
+    ) // 5min
   }
   const handleOffline = () => {
     clearInterval(intervalId)
@@ -83,7 +86,7 @@ function setGlobalDefaults() {
     (select) => {
       const lastOption = select.lastElementChild // Get the current session
       return lastOption && 'value' in lastOption ? (lastOption.value as string) : ''
-    }
+    },
   )
   setFormElementValue(
     formElements,
@@ -92,7 +95,7 @@ function setGlobalDefaults() {
       'ctl00$ContentPlaceHolder1$ddlSection',
       'ctl00$ContentPlaceHolder1$footer2$ddlsection', // StudentAttendence
     ],
-    '1' // A
+    '1', // A
   )
   setFormElementValue(formElements, 'ctl00$ContentPlaceHolder1$ddlstream', '3') // Arts
   setFormElementValue(formElements, 'ctl00$ContentPlaceHolder1$ddlsubject', '0') // All
@@ -101,8 +104,8 @@ function setGlobalDefaults() {
 function autoDetectTabTitle() {
   const title =
     // Get the title from the active breadcrumb or from the page title
-    document.querySelector('ol.breadcrumb li.active, .box_heading h2')?.textContent?.trim() ??
-    // Get the last pathname segment from url
+    document.querySelector('ol.breadcrumb li.active, .box_heading h2')?.textContent?.trim()
+    ?? // Get the last pathname segment from url
     location.pathname.split('/').at(-1)?.slice(0, -5)
 
   document.title = title ? `${title} | ShalaDarpan` : 'ShalaDarpan'
@@ -112,7 +115,7 @@ function handlePopupLogin() {
   const popup = window.open(
     `${getCurrentSdSegment()}/Home/Public2/OfficeLoginNew.aspx`,
     'popup-login',
-    'popup=1,toolbar=0,location=0,menubar=0,scrollbars=1,status=1,width=500,height=650'
+    'popup=1,toolbar=0,location=0,menubar=0,scrollbars=1,status=1,width=500,height=650',
   )
   if (!popup) return
   popup.focus()
@@ -121,8 +124,8 @@ function handlePopupLogin() {
   })
   const frc = () => {
     if (
-      popup.document.readyState === 'loading' &&
-      popup.location.pathname.toLowerCase().includes('school')
+      popup.document.readyState === 'loading'
+      && popup.location.pathname.toLowerCase().includes('school')
     ) {
       console.log('ho gya login')
       cancelAnimationFrame(animationFrameId)
