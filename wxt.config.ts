@@ -21,6 +21,7 @@ export default defineConfig({
     },
   },
   manifest: () => ({
+    permissions: ['storage'],
     // Get the next release version from `semantic-release`
     version: import.meta.env.EXT_VERSION,
     name: 'ShalaDarpan Quick',
