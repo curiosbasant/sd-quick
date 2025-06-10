@@ -6,46 +6,77 @@ import { createButton, getCurrentSdSegment, setFavicon, setFormElementValue } fr
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*'],
   main(ctx) {
-    setSessionRefreshInterval(ctx)
-    setGlobalDefaults()
     setFavicon('/SD1/Home/Public2/assets/img/home-icon.png')
     autoDetectTabTitle()
 
-    // add popup login for session expired blank pages
-    if (document.body.children.length === 0) {
-      const p = document.body.appendChild(document.createElement('p'))
-      p.className =
-        'tw:p-8 tw:m-4 tw:bg-rose-100 tw:border tw:border-s-6 tw:text-rose-500 tw:border-s-rose-500 tw:border-rose-200 tw:rounded-sm'
-      p.append(
-        'Oops! Your session has been expired unexpectedly, please ',
-        createButton({
-          className:
-            'tw:text-blue-600 tw:font-bold tw:hover:cursor-pointer tw:hover:underline tw:decoration-blue-400',
-          children: 'Login',
-          onClick: handlePopupLogin,
-          signal: ctx.signal,
-        }),
-        ' again to continue!',
-      )
+    const hasLoggedIn = location.href.toLowerCase().includes('school')
+    if (hasLoggedIn) {
+      const isBlankPage = document.body.children.length === 0
+      if (isBlankPage) {
+        handleBlankPages(ctx)
+      } else {
+        setSessionRefreshInterval(ctx)
+        setGlobalDefaults()
+      }
     }
-
-    // Prevent annoying login page always being opening in new tab
-    document
-      .querySelectorAll('.loginMenu .dropdown-item')
-      .forEach((a) => a.removeAttribute('target'))
-
-    // Force dropdown menu links in single line, so it don't push others
-    document.querySelectorAll<HTMLAnchorElement>('#ulmenu1 .padd').forEach((a) => {
-      a.style.display = '-webkit-box'
-      a.style.webkitBoxOrient = 'vertical'
-      a.style.webkitLineClamp = '1'
-      a.style.overflow = 'hidden'
-      a.style.padding = '3px 0 3px 20px'
-
-      a.textContent && (a.title = a.textContent.trim())
-    })
+    addGlobalStyles()
   },
 })
+
+function autoDetectTabTitle() {
+  const title =
+    // Get the title from the active breadcrumb or from the page title
+    document.querySelector('ol.breadcrumb li.active, .box_heading h2')?.textContent?.trim()
+    ?? location.pathname.split('/').at(-1)?.slice(0, -5) // Get the last pathname segment from url
+
+  document.title = title ? `${title} | ShalaDarpan` : 'ShalaDarpan'
+}
+
+function handleBlankPages(ctx: ContentScriptContext) {
+  // add popup login for session expired blank pages
+  const p = document.body.appendChild(document.createElement('p'))
+  p.className =
+    'tw:p-8 tw:m-4 tw:bg-rose-100 tw:border tw:border-s-6 tw:text-rose-500 tw:border-s-rose-500 tw:border-rose-200 tw:rounded-sm'
+  p.append(
+    'Oops! Your session has been expired unexpectedly, please ',
+    createButton({
+      className:
+        'tw:text-blue-600 tw:font-bold tw:hover:cursor-pointer tw:hover:underline tw:decoration-blue-400',
+      children: 'Login',
+      onClick: handlePopupLogin,
+      signal: ctx.signal,
+    }),
+    ' again to continue!',
+  )
+}
+
+function handlePopupLogin() {
+  const popup = window.open(
+    `${getCurrentSdSegment()}/Home/Public2/OfficeLoginNew.aspx`,
+    'popup-login',
+    'popup=1,toolbar=0,location=0,menubar=0,scrollbars=1,status=1,width=500,height=650',
+  )
+  if (!popup) return
+  popup.focus()
+  popup.addEventListener('DOMContentLoaded', () => {
+    popup.document.querySelector('main')?.scrollIntoView()
+  })
+
+  const frc = () => {
+    if (
+      popup.document.readyState === 'loading'
+      && popup.location.pathname.toLowerCase().includes('school')
+    ) {
+      cancelAnimationFrame(animationFrameId)
+      popup.close()
+      window.location.reload()
+      return
+    }
+
+    animationFrameId = requestAnimationFrame(frc)
+  }
+  let animationFrameId = requestAnimationFrame(frc)
+}
 
 function setSessionRefreshInterval(ctx: ContentScriptContext) {
   let intervalId = 0
@@ -101,40 +132,17 @@ function setGlobalDefaults() {
   setFormElementValue(formElements, 'ctl00$ContentPlaceHolder1$ddlsubject', '0') // All
 }
 
-function autoDetectTabTitle() {
-  const title =
-    // Get the title from the active breadcrumb or from the page title
-    document.querySelector('ol.breadcrumb li.active, .box_heading h2')?.textContent?.trim()
-    ?? // Get the last pathname segment from url
-    location.pathname.split('/').at(-1)?.slice(0, -5)
+function addGlobalStyles() {
+  // Align stars in a row
+  document.querySelector('div:has(>#lblSchoolStar)')?.classList.add('tw:flex')
 
-  document.title = title ? `${title} | ShalaDarpan` : 'ShalaDarpan'
-}
+  // Prevent annoying login page always being opening in new tab
+  document.querySelectorAll('.loginMenu .dropdown-item').forEach((a) => a.removeAttribute('target'))
 
-function handlePopupLogin() {
-  const popup = window.open(
-    `${getCurrentSdSegment()}/Home/Public2/OfficeLoginNew.aspx`,
-    'popup-login',
-    'popup=1,toolbar=0,location=0,menubar=0,scrollbars=1,status=1,width=500,height=650',
-  )
-  if (!popup) return
-  popup.focus()
-  popup.addEventListener('DOMContentLoaded', () => {
-    popup.document.querySelector('main')?.scrollIntoView()
+  // Force dropdown menu links in single line, so it don't push others
+  document.querySelectorAll<HTMLAnchorElement>('#ulmenu1 .padd').forEach((a) => {
+    a.classList.add('tw:line-clamp-1')
+    a.style.padding = '4px 0 4px 20px' // couldn't override the padding with classes
+    a.textContent && (a.title = a.textContent.trim())
   })
-  const frc = () => {
-    if (
-      popup.document.readyState === 'loading'
-      && popup.location.pathname.toLowerCase().includes('school')
-    ) {
-      console.log('ho gya login')
-      cancelAnimationFrame(animationFrameId)
-      popup.close()
-      window.location.reload()
-      return
-    }
-
-    animationFrameId = requestAnimationFrame(frc)
-  }
-  let animationFrameId = requestAnimationFrame(frc)
 }
