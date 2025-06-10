@@ -63,6 +63,8 @@ function handlePopupLogin() {
   })
 
   const frc = () => {
+    if (popup.closed) return
+
     if (
       popup.document.readyState === 'loading'
       && popup.location.pathname.toLowerCase().includes('school')
