@@ -115,13 +115,19 @@ function prePopulateFormValues(ctx: ContentScriptContext) {
       const elem = form1.elements[name]
       // Ignore elements with onchange attribute, as it might perform any action
       if (elem && !elem.hasAttribute('onchange') && typeof value === 'string') {
-        elem.classList.add(
-          'tw:outline',
-          'tw:outline-pink-400',
-          'tw:outline-offset-2',
-          'tw:rounded-xs',
-        )
+        const oldValue = elem.value
         elem.value = value
+        // Add the outline if value successfully set, otherwise reset value
+        if (elem.value === value)
+          elem.classList.add(
+            'tw:outline',
+            'tw:outline-pink-400',
+            'tw:outline-offset-2',
+            'tw:rounded-xs',
+          )
+        else {
+          elem.value = oldValue
+        }
       }
     }
   })
@@ -144,7 +150,7 @@ function prePopulateFormValues(ctx: ContentScriptContext) {
 
 function addGlobalStyles() {
   // Align stars in a row
-  document.querySelector('div:has(>#lblSchoolStar)')?.classList.add('tw:flex')
+  document.querySelector('#UpdatePanel1')?.classList.add('tw:**:has-[>#lblSchoolStar]:flex')
 
   // Prevent annoying login page always being opening in new tab
   document.querySelectorAll('.loginMenu .dropdown-item').forEach((a) => a.removeAttribute('target'))

@@ -7,7 +7,7 @@ export function observeElementPresence<Result extends Element>(options: {
   target?: Element | string | null
   signal?: AbortSignal
 }) {
-  let previousResult: Result | null = null
+  let previousResult: Result | null | undefined
   const target =
     (typeof options.target === 'string' ? document.querySelector(options.target) : options.target)
     ?? document
