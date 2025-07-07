@@ -24,6 +24,8 @@ export default defineContentScript({
         const [firstSelect, ...restSelects] = table.querySelectorAll<HTMLSelectElement>(
           'tr:nth-child(n+2) select',
         )
+        // if nothing to process
+        if (!firstSelect) return
 
         for (const statusSelect of restSelects) {
           statusSelect.dataset.shiftTarget = ''
