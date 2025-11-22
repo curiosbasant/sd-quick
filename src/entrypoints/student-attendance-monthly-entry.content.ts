@@ -1,11 +1,10 @@
-import { scrapeTable } from '~/utils/browser'
-import { formatOrdinal } from '~/utils/formatters'
+import { createButton, downloadFile, formatOrdinal, makeSdRequest, scrapeTable } from '~/utils'
 
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/StudentAttendence.aspx'],
   main(ctx) {
     const container = document.querySelector(
-      '#ContentPlaceHolder1_footer2_divpersonalinformation > div:nth-child(4) > div:nth-child(3)'
+      '#ContentPlaceHolder1_footer2_divpersonalinformation > div:nth-child(4) > div:nth-child(3)',
     )
     if (container) {
       const downloadBtn = createButton({
@@ -22,16 +21,16 @@ export default defineContentScript({
 
 async function handleDownloading() {
   const sessionElem = document.querySelector<HTMLSelectElement>(
-    '#ContentPlaceHolder1_footer2_ddlsession'
+    '#ContentPlaceHolder1_footer2_ddlsession',
   )
   const classElem = document.querySelector<HTMLSelectElement>(
-    '#ContentPlaceHolder1_footer2_ddlclass'
+    '#ContentPlaceHolder1_footer2_ddlclass',
   )
   const sectionElem = document.querySelector<HTMLSelectElement>(
-    '#ContentPlaceHolder1_footer2_ddlsection'
+    '#ContentPlaceHolder1_footer2_ddlsection',
   )
   const monthElem = document.querySelector<HTMLSelectElement>(
-    '#ContentPlaceHolder1_footer2_ddlmonth'
+    '#ContentPlaceHolder1_footer2_ddlmonth',
   )
   if (!sessionElem?.value || !classElem?.value || !sectionElem || !monthElem)
     return alert('Select the required session and class first!')
@@ -45,8 +44,8 @@ async function handleDownloading() {
   downloadFile(
     data.map((row) => row.join(',')).join('\n'),
     `student_monthly_attendance_report-${sessionElem.value}_class_${formatOrdinal(
-      +classElem.value
-    )}.csv`
+      +classElem.value,
+    )}.csv`,
   )
 }
 

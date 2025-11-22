@@ -66,7 +66,7 @@ function filterTableByDate(filterDate: Date) {
       .querySelector('#ContentPlaceHolder1_Panel1')
       ?.insertAdjacentHTML(
         'afterbegin',
-        `<p style="font-size: 24px; text-align: center; padding: 4px; font-weight: 800;">TC List Dated: ${today}</p>`
+        `<p style="font-size: 24px; text-align: center; padding: 4px; font-weight: 800;">TC List Dated: ${today}</p>`,
       )
   } else {
     const p = document.querySelector('#ContentPlaceHolder1_Panel1')?.firstElementChild

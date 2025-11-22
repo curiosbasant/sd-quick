@@ -1,17 +1,16 @@
 export function observeElementPresence<Result extends Element>(options: {
-    /** To get the element from the @link{target} */
-    selector: string
+  /** To get the element from the @link{target} */
+  selector: string
   /** Trigger every time the selector element changes */
   onPresenceChange: (element: Result | null) => void
   /** The non-changing container to observe from, the element should not update on new requests @default document */
-    target?: Element | string | null
-    signal?: AbortSignal
+  target?: Element | string | null
+  signal?: AbortSignal
 }) {
-  let previousResult: Result | null = null
+  let previousResult: Result | null | undefined
   const target =
-    (typeof options.target === 'string'
-      ? document.querySelector(options.target)
-      : options.target) ?? document
+    (typeof options.target === 'string' ? document.querySelector(options.target) : options.target)
+    ?? document
   const handleChanges = () => {
     if (options.signal?.aborted) return
 
@@ -60,7 +59,7 @@ export function observeShiftKey(options?: {
 export function setFormElementValue<T extends HTMLInputElement | HTMLSelectElement | RadioNodeList>(
   elements: HTMLFormControlsCollection,
   name: string | string[],
-  value: string | ((elem: T) => string)
+  value: string | ((elem: T) => string),
 ) {
   const resolveValue = (name: string) => {
     const elem = elements.namedItem(name) as T | null
@@ -72,8 +71,8 @@ export function setFormElementValue<T extends HTMLInputElement | HTMLSelectEleme
 
 export function setFavicon(url: string) {
   const favicon =
-    document.querySelector<HTMLLinkElement>('#favicon') ??
-    (() => {
+    document.querySelector<HTMLLinkElement>('#favicon')
+    ?? (() => {
       const link = document.createElement('link')
       link.id = 'favicon'
       link.rel = 'shortcut icon'
@@ -114,7 +113,7 @@ export function printContent(...content: (Node | string)[]) {
   const printPopup = window.open(
     '',
     '',
-    'left=2,top=0,toolbar=0,scrollbars=1,status=1;width=350,height=250'
+    'left=2,top=0,toolbar=0,scrollbars=1,status=1;width=350,height=250',
   )
 
   if (printPopup) {
@@ -129,13 +128,18 @@ export function printContent(...content: (Node | string)[]) {
   }
 }
 
+/** @returns /SD{1-4} */
+export function getCurrentSdSegment() {
+  return location.pathname.slice(0, 4)
+}
+
 export function scrapeTable(selector: string, doc = document) {
   const rows = doc.querySelectorAll<HTMLTableRowElement>(selector + ' tr')
   return [...rows].map((tr) =>
     [...tr.children].map((td) =>
-      td.firstElementChild?.matches('select, input')
-        ? (td.firstElementChild as HTMLInputElement).value
-        : td.textContent?.trim() || ''
-    )
+      td.firstElementChild?.matches('select, input') ?
+        (td.firstElementChild as HTMLInputElement).value
+      : td.textContent?.trim() || '',
+    ),
   )
 }

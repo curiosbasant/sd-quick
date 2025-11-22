@@ -1,3 +1,5 @@
+import { createButton, downloadFile } from '~/utils'
+
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/SchoolStudentProfiles_New.aspx'],
   main(ctx) {
@@ -16,7 +18,7 @@ export default defineContentScript({
           title: 'Download CSV',
           onClick: () => {
             const rows = document.querySelectorAll<HTMLTableRowElement>(
-              '#ContentPlaceHolder1_grdStudentProfile tr'
+              '#ContentPlaceHolder1_grdStudentProfile tr',
             )
             const csvContent = [...rows]
               .map((tr) => [...tr.children].map((td) => td.textContent?.trim()).join(','))
@@ -93,7 +95,7 @@ function handlePrint(ev: MouseEvent) {
   // remove high specificity styling
   content
     .querySelectorAll(
-      '#ContentPlaceHolder1_head, #ContentPlaceHolder1_head .row .col, #tbl_class_section, #div_Class_Section, #ContentPlaceHolder1_today_Date, #ContentPlaceHolder1_grdStudentProfile'
+      '#ContentPlaceHolder1_head, #ContentPlaceHolder1_head .row .col, #tbl_class_section, #div_Class_Section, #ContentPlaceHolder1_today_Date, #ContentPlaceHolder1_grdStudentProfile',
     )
     .forEach((el) => el.removeAttribute('style'))
   // remove unnecessary elements
@@ -111,7 +113,7 @@ function handlePrint(ev: MouseEvent) {
   const printPopup = window.open(
     '',
     '',
-    'left=100,top=50,width=750,height=1000,toolbar=0,scrollbars=0,status=0'
+    'left=100,top=50,width=750,height=1000,toolbar=0,scrollbars=0,status=0',
   )
   if (printPopup) {
     printPopup.document.write(content.innerHTML)

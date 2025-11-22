@@ -4,7 +4,7 @@
   </a>
 </p>
 
-# ![alt text](public/icon/32.png) ShalaDarpan Quick
+<h1><img src="src/assets/icon.png" height="24" /> ShalaDarpan Quick</h1>
 
 This is a browser extension for ShalaDarpan website. It has various utility buttons/functions to make the website experience more seamless.
 

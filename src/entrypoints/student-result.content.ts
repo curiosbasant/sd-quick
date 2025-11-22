@@ -1,5 +1,4 @@
-import { printContent } from '~/utils/browser'
-import { makeSdRequest } from '~/utils/request'
+import { createButton, makeSdRequest, printContent } from '~/utils'
 
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/AllStudentResult.aspx'],

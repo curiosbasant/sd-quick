@@ -14,7 +14,14 @@ export default defineConfig({
       }
     },
   },
+  imports: {
+    dirsScanOptions: {
+      // Disable auto-imports for project's files
+      fileFilter: () => false,
+    },
+  },
   manifest: () => ({
+    permissions: ['storage'],
     // Get the next release version from `semantic-release`
     version: import.meta.env.EXT_VERSION,
     name: 'ShalaDarpan Quick',

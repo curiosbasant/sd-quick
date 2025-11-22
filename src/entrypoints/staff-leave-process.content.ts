@@ -22,8 +22,10 @@ export default defineContentScript({
         if (!table) return
         // We will handle the first select input differently
         const [firstSelect, ...restSelects] = table.querySelectorAll<HTMLSelectElement>(
-          'tr:nth-child(n+2) select'
+          'tr:nth-child(n+2) select',
         )
+        // if nothing to process
+        if (!firstSelect) return
 
         for (const statusSelect of restSelects) {
           statusSelect.dataset.shiftTarget = ''
@@ -47,7 +49,7 @@ export default defineContentScript({
 
           // Click check-all checkbox
           const checkAllCheckbox = table.querySelector<HTMLInputElement>(
-            '#ContentPlaceHolder1_grdLeaveDetails_chkAll'
+            '#ContentPlaceHolder1_grdLeaveDetails_chkAll',
           )!
           checkAllCheckbox.checked = false // so it can be checked again
           checkAllCheckbox.click()

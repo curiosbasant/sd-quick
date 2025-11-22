@@ -1,3 +1,5 @@
+import { getCurrentSdSegment } from '~/utils/browser'
+
 export default defineContentScript({
   matches: [
     'https://rajshaladarpan.rajasthan.gov.in/*/OfficeLoginNew.aspx',
@@ -15,11 +17,11 @@ export default defineContentScript({
     captchaImg && (captchaImg.className = 'tw:w-3/4 tw:m-auto')
 
     const captchaInput = document.querySelector<HTMLInputElement>(
-      '#bodyContent_txt_Captchaname, #txt_Captchaname'
+      '#bodyContent_txt_Captchaname, #txt_Captchaname',
     )
     if (captchaInput) {
-    // Remove annoying alert message on blur for empty captcha input
-    captchaInput.removeAttribute('onblur')
+      // Remove annoying alert message on blur for empty captcha input
+      captchaInput.removeAttribute('onblur')
     }
   },
 })
