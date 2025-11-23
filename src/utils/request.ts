@@ -13,6 +13,11 @@ export function makeSdRequest(url = location.href, payload = {}) {
   }).then(resolveDocument)
 }
 
+export function responseJson(res: Response) {
+  if (res.ok) return res.json()
+  throw new Error(`HTTP error! status: ${res.status}`)
+}
+
 export function resolveDocument(res: Response) {
   if (res.ok) return res.text().then(parseHtmlString)
   throw new Error('Response not okay!')

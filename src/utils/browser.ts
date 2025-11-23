@@ -128,6 +128,14 @@ export function printContent(...content: (Node | string)[]) {
   }
 }
 
+export async function readClipboardText() {
+  try {
+    return await navigator.clipboard.readText()
+  } catch {
+    throw new Error('Please, keep your mouse focus on the page and then try again!')
+  }
+}
+
 /** @returns /SD{1-4} */
 export function getCurrentSdSegment() {
   return location.pathname.slice(0, 4)
