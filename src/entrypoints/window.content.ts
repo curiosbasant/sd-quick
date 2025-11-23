@@ -1,3 +1,4 @@
+import { ContentScriptDefinition } from 'wxt'
 import { makeSdRequest } from '~/utils/request'
 
 declare global {
@@ -8,15 +9,11 @@ declare global {
   }
 }
 
-export default defineContentScript({
+export default {
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*'],
   world: 'MAIN',
   main() {
     // Expose utility functions
     window.makeSdRequest = makeSdRequest
-    // Infinite session timeout
-    window.timeInSecondsAfterSessionOut = Infinity
-    // Optional, just to avoid creating unnecessary timeouts
-    window.StartThisSessionTimer = () => {}
   },
-})
+} satisfies ContentScriptDefinition
