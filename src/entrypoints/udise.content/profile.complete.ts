@@ -19,8 +19,6 @@ export async function completeStudentProfile(pen: string, tr?: HTMLTableRowEleme
   const sdStudent = await getShalaDarpanStudent(pen)
   const udiseStudent = await getUdiseStudent(selectedClass, pen)
 
-  const lastTd = tr?.lastElementChild as HTMLTableCellElement
-
   const steps =
     udiseStudent.classId === 9 || udiseStudent.classId === 10 ?
       [
@@ -35,22 +33,35 @@ export async function completeStudentProfile(pen: string, tr?: HTMLTableRowEleme
         completeStudentFacilityProfile,
       ]
 
+  // skip if already completed
+  if (udiseStudent.formStatus >= steps.length) {
+    console.info(
+      '✅ Profile already completed for pen %s with studentId %s!',
+      pen,
+      udiseStudent.studentId,
+    )
+    return false
+  }
+
+  const lastTd = tr?.lastElementChild as HTMLTableCellElement
+  console.group(`📝 $s (%s)`, sdStudent.studentName, udiseStudent.studentId)
+  console.info('🚀 Starting profile for pen %s with studentId %s', pen, udiseStudent.studentId)
   for (let index = udiseStudent.formStatus; index < steps.length; index++) {
     const completeProfileStep = steps[index]
-
-    console.info(`Step ${index + 1} started!`)
     await completeProfileStep(udiseStudent, sdStudent).then(handleResult)
     lastTd?.children[index].classList.add('submit')
     lastTd?.children[index].classList.remove('incomplete')
-    console.info(`Step ${index + 1} completed!`)
-    await sleep(randomBetween(200, 500)) // Slow down a bit
+    console.info(`✔️ Step ${index + 1} completed!`)
+    await sleep(randomBetween(400, 700)) // Slow down a bit
   }
+
   // Last step, complete profile
   await completeStudentProfilePreview(udiseStudent).then(handleResult)
   // get last 2nd element, as the last element is ul list
   const img = lastTd?.children[lastTd.childElementCount - 2]?.firstElementChild as HTMLImageElement
   img && (img.src = './assets/img/complete.png')
-  console.info('Profile all completed!')
+  console.info('🎉 Profile completed!')
+  console.groupEnd()
 
   // mark row as completed
   const statusTd = tr?.lastElementChild?.previousElementSibling?.firstElementChild
@@ -58,6 +69,8 @@ export async function completeStudentProfile(pen: string, tr?: HTMLTableRowEleme
     statusTd.textContent = 'Completed'
     statusTd.classList = 'Completed'
   }
+
+  return true
 }
 
 function handleResult(result: UdiseResult) {

@@ -140,6 +140,7 @@ export type UdiseResult<T = any> =
       status: false
       error: {
         message: string
+        type: string
         data?: {
           errorFields: Record<string, string>
         }
