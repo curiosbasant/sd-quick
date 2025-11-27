@@ -1,17 +1,20 @@
-import { sleep, responseJson, randomBetween } from '~/utils'
+import { randomBetween, sleep } from '~/utils'
 import { completeStudentGeneralProfile } from './profile.step-1'
 import { completeStudentEnrolmentProfile } from './profile.step-2'
 import { completeStudentFacilityProfile } from './profile.step-3'
 import { completeStudentProfilePreview, completeStudentVocationalProfile } from './profile.step-4'
-import { getSchoolId, getShalaDarpanStudent, UdiseClassStudent, UdiseResult } from './profile.utils'
+import {
+  getShalaDarpanStudent,
+  getUdiseClassStudents,
+  UdiseClassStudent,
+  UdiseResult,
+} from './profile.utils'
 
 export async function completeStudentProfile(pen: string, tr?: HTMLTableRowElement) {
   const selectedClass = document.querySelector<HTMLSelectElement>(
     'app-student-tracking-cy select:has(option[value="1"]:first-child)',
   )?.value
-  if (!selectedClass) {
-    throw new Error('Please select class first!')
-  }
+  if (!selectedClass) throw new Error('Please select class first!')
 
   const sdStudent = await getShalaDarpanStudent(pen)
   const udiseStudent = await getUdiseStudent(selectedClass, pen)
@@ -74,7 +77,7 @@ async function getUdiseStudent(cl: string, pen: string) {
   if (!window.__udise_class_cache.has(cl)) {
     window.__udise_class_cache.add(cl)
 
-    const data = await getClassList(cl)
+    const data = await getUdiseClassStudents(cl)
     for (const student of data) {
       const pen = student.studentCodeNat
       window.__udise_student_cache.set(pen, student)
@@ -86,29 +89,4 @@ async function getUdiseStudent(cl: string, pen: string) {
     throw new Error(`UDISE+ student with pen ${pen} not found in class ${cl}!`)
   }
   return student as UdiseClassStudent
-}
-
-async function getClassList(cl: string) {
-  const res = await fetch(
-    `https://sdms.udiseplus.gov.in/p2/api/cy/students/${getSchoolId()}/${cl}`,
-    {
-      headers: {
-        accept: 'application/json, text/plain, */*',
-        'accept-language': 'en-IN,en;q=0.9,hi;q=0.8',
-        'sec-ch-ua': '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
-      },
-      referrer: 'https://sdms.udiseplus.gov.in/g2/',
-      body: null,
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
-    },
-  )
-  const { data } = await responseJson(res)
-  return data as UdiseClassStudent[]
 }

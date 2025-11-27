@@ -47,6 +47,14 @@ export async function getShalaDarpanStudent(pen: string) {
   return studentData
 }
 
+
+export async function getUdiseClassStudents(cl: string) {
+  const result = await udiseGet<UdiseClassStudent[]>(
+    `https://sdms.udiseplus.gov.in/p2/api/cy/students/${getSchoolId()}/${cl}`,
+  )
+  return result.status ? result.data : []
+}
+
 export async function refreshShalaDarpanDetails() {
   const studentProfileRaw = (await readClipboardText()).trim()
   if (!studentProfileRaw) throw new Error('Clipboard is empty!')
@@ -71,6 +79,38 @@ export function getSchoolId() {
   return raw && JSON.parse(raw)?.userRegionId
 }
 
+export function udiseGet<T>(
+  url: string | URL,
+  payload?: string[][] | Record<string, string> | string | URLSearchParams,
+) {
+  let modifiedUrl = url
+  if (payload) {
+    modifiedUrl = typeof url === 'string' ? new URL(url) : url
+    const searchParams = new URLSearchParams(payload)
+    for (const [name, value] of searchParams) {
+      modifiedUrl.searchParams.append(name, value)
+    }
+  }
+
+  return fetch(modifiedUrl, {
+    headers: {
+      accept: 'application/json, text/plain, */*',
+      'accept-language': 'en-IN,en;q=0.9,hi;q=0.8',
+      'content-type': 'application/json',
+      'sec-ch-ua': '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-origin',
+    },
+    referrer: 'https://sdms.udiseplus.gov.in/g2/',
+    body: null,
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'include',
+  }).then<UdiseResult<T>>(responseJson)
+}
 export function udisePost<T>(url: string | URL, payload: unknown) {
   return fetch(url, {
     headers: {

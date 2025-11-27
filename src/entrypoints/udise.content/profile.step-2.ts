@@ -1,5 +1,4 @@
-import { responseJson } from '~/utils'
-import { UdiseClassStudent, udisePost, UdiseResult } from './profile.utils'
+import { UdiseClassStudent, udiseGet, udisePost } from './profile.utils'
 
 export type Step2 = 'srn' | 'doa' | 'rollNumber'
 
@@ -7,19 +6,9 @@ export async function completeStudentEnrolmentProfile(
   profile: UdiseClassStudent,
   payload: Record<Step2, string>,
 ) {
-  const result = await fetch(
+  const result = await udiseGet<any>(
     `https://sdms.udiseplus.gov.in/p2/api/v2/students/enrolment/${profile.studentId}`,
-    {
-      headers: {
-        accept: 'application/json, text/plain, */*',
-        'accept-language': 'en-IN,en;q=0.9,hi;q=0.8',
-      },
-      body: null,
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
-    },
-  ).then<UdiseResult>(responseJson)
+  )
   if (!result.status) return result
 
   const { attendancePy, classPY, enrStatusPY, examMarksPy, examResultPy, enrUnder } = result.data
