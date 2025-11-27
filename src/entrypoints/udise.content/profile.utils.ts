@@ -10,12 +10,11 @@ export async function getShalaDarpanStudent(pen: string) {
 
   const lines = studentProfileRaw.split(navigator.userAgent.includes('Windows') ? '\r\n' : '\n')
   const data = lines.find((r) => r.includes(pen))?.split('\t')
-  if (!data?.[0]) {
-    throw new Error(`ShalaDarpan details for pen ${pen} not found!`)
-  }
+  if (!data?.[0]) throw new Error(`ShalaDarpan details for pen ${pen} not found!`)
+
   const [
-    srn,
     _pen, // unused
+    srn,
     doa,
     studentName,
     fName,
@@ -53,7 +52,11 @@ export async function refreshShalaDarpanDetails() {
   if (!studentProfileRaw) throw new Error('Clipboard is empty!')
 
   const [shouldBeSr] = studentProfileRaw.split('\t', 1)
-  if (!/^\d{4}$/.test(shouldBeSr))
+  if (
+    !/^\d{11}$/.test(shouldBeSr)
+    && +!shouldBeSr.startsWith('NA')
+    && +!shouldBeSr.startsWith('#N/A')
+  )
     throw new Error(`Invalid clipboard data.\n\n${studentProfileRaw.slice(0, 50)}...`)
 
   localStorage.setItem('sd_student_profiles', studentProfileRaw)
