@@ -6,9 +6,9 @@ export default {
       '@semantic-release/commit-analyzer',
       {
         releaseRules: [
-          { breaking: true, release: 'major' },
+          { breaking: true, release: 'minor' },
           { revert: true, release: 'patch' },
-          { type: 'feat', release: 'minor' },
+          { type: 'feat', release: 'patch' },
           { type: 'fix', release: 'patch' },
           { type: 'perf', release: 'patch' },
           { type: 'style', release: 'patch' },
