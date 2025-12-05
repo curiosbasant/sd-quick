@@ -24,6 +24,7 @@ export function handleClassListPage() {
       const errorMessage = error instanceof Error ? error.message : String(error)
       console.error(errorMessage)
       alert(errorMessage)
+      console.groupEnd()
     }
   })
 
@@ -65,6 +66,7 @@ export function handleClassListPage() {
           student.studentId,
           err,
         )
+        console.groupEnd()
 
         return true
       })
