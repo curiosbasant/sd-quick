@@ -59,6 +59,7 @@ export function handleClassListPage() {
     for (let i = 0; i < data.length; i++) {
       const student = data[i]
       const tr = rows?.children[i] as HTMLTableRowElement
+      tr?.classList.add('inProgress')
       const success = await completeStudentProfile(student.studentCodeNat, tr).catch((err) => {
         console.info(
           'Student with pen %s (%s) got error!\n',
@@ -71,6 +72,7 @@ export function handleClassListPage() {
         return true
       })
       success && (await sleep(6000))
+      tr?.classList.remove('inProgress')
     }
     console.info('🎉 Class %s is all complete!', classSearchValue)
     alert(`🎉 Class ${classSearchValue} is all complete!`)

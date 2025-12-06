@@ -4,20 +4,18 @@ import { completeStudentEnrolmentProfile } from './profile.step-2'
 import { completeStudentFacilityProfile } from './profile.step-3'
 import { completeStudentProfilePreview, completeStudentVocationalProfile } from './profile.step-4'
 import {
+  getSchoolId,
   getShalaDarpanStudent,
   getUdiseClassStudents,
   UdiseClassStudent,
+  udiseGet,
   UdiseResult,
 } from './profile.utils'
 
 export async function completeStudentProfile(pen: string, tr?: HTMLTableRowElement) {
-  const selectedClass = document.querySelector<HTMLSelectElement>(
-    'app-student-tracking-cy select:has(option[value="1"]:first-child)',
-  )?.value
-  if (!selectedClass) throw new Error('Please select class first!')
-
   const sdStudent = await getShalaDarpanStudent(pen)
-  const udiseStudent = await getUdiseStudent(selectedClass, pen)
+  if (!sdStudent.rollNumber) return false
+  const udiseStudent = await getUdiseStudent(pen)
 
   const steps =
     udiseStudent.classId === 9 || udiseStudent.classId === 10 ?
@@ -43,15 +41,15 @@ export async function completeStudentProfile(pen: string, tr?: HTMLTableRowEleme
     return false
   }
 
-  const lastTd = tr?.lastElementChild as HTMLTableCellElement
-  console.group(`📝 $s (%s)`, sdStudent.studentName, udiseStudent.studentId)
+  console.group(`📝 %s (%s)`, sdStudent.studentName, udiseStudent.studentId)
   console.info('🚀 Starting profile for pen %s with studentId %s', pen, udiseStudent.studentId)
+  const lastTd = tr?.lastElementChild as HTMLTableCellElement
   for (let index = udiseStudent.formStatus; index < steps.length; index++) {
     const completeProfileStep = steps[index]
     await completeProfileStep(udiseStudent, sdStudent).then(handleResult)
     lastTd?.children[index].classList.add('submit')
     lastTd?.children[index].classList.remove('incomplete')
-    console.info(`✔️ Step ${index + 1} completed!`)
+    console.info('☑️ Step %s completed!', index + 1)
     await sleep(randomBetween(400, 700)) // Slow down a bit
   }
 
@@ -83,7 +81,7 @@ function handleResult(result: UdiseResult) {
   throw new Error((result.error.message || 'Unknown error occurred') + (fieldErrorMessages ?? ''))
 }
 
-async function getUdiseStudent(cl: string, pen: string) {
+async function cachifyUdiseClass(cl: string) {
   window.__udise_class_cache ??= new Set()
   window.__udise_student_cache ??= new Map()
 
@@ -96,10 +94,24 @@ async function getUdiseStudent(cl: string, pen: string) {
       window.__udise_student_cache.set(pen, student)
     }
   }
+}
 
-  const student = window.__udise_student_cache.get(pen)
-  if (!student) {
-    throw new Error(`UDISE+ student with pen ${pen} not found in class ${cl}!`)
+async function getUdiseStudent(pen: string) {
+  const size = window.__udise_student_cache?.size ?? 0
+  if (size === 0) {
+    const result = await udiseGet<UdiseClassStudent[]>(
+      `https://sdms.udiseplus.gov.in/p2/api/cy/students/all/${getSchoolId()}`,
+    )
+    if (!result.status) throw new Error(`Failed to get UDISE+ students!`)
+
+    window.__udise_student_cache ??= new Map()
+    for (const student of result.data) {
+      window.__udise_student_cache.set(student.studentCodeNat, student)
+    }
   }
-  return student as UdiseClassStudent
+
+  const student = window.__udise_student_cache?.get(pen)
+  if (student) return student as UdiseClassStudent
+  // https://sdms.udiseplus.gov.in/p2/api/cy/students/1103032105
+  throw new Error(`UDISE+ student with pen ${pen} not found!`)
 }
