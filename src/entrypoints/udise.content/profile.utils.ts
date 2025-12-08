@@ -47,12 +47,26 @@ export async function getShalaDarpanStudent(pen: string) {
   return studentData
 }
 
+export async function getUdiseStudent(pen: string) {
+  const cacheSize = window.__udise_student_cache?.size ?? 0
+  if (cacheSize === 0) await cacheUdiseStudents()
 
-export async function getUdiseClassStudents(cl: string) {
+  const student = window.__udise_student_cache?.get(pen)
+  if (student) return student
+
+  throw new Error(`UDISE+ student with pen ${pen} not found!`)
+}
+
+async function cacheUdiseStudents() {
   const result = await udiseGet<UdiseClassStudent[]>(
-    `https://sdms.udiseplus.gov.in/p2/api/cy/students/${getSchoolId()}/${cl}`,
+    `https://sdms.udiseplus.gov.in/p2/api/cy/students/all/${getSchoolId()}`,
   )
-  return result.status ? result.data : []
+  if (!result.status) throw new Error(`Failed to get UDISE+ students!`)
+
+  window.__udise_student_cache ??= new Map()
+  for (const student of result.data) {
+    window.__udise_student_cache.set(student.studentCodeNat, student)
+  }
 }
 
 export async function refreshShalaDarpanDetails() {

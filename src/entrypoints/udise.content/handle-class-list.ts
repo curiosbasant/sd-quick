@@ -1,6 +1,6 @@
 import { sleep } from '~/utils'
 import { completeStudentProfile } from './profile.complete'
-import { getUdiseClassStudents, refreshShalaDarpanDetails } from './profile.utils'
+import { refreshShalaDarpanDetails } from './profile.utils'
 
 export function handleClassListPage() {
   const tbody = document.querySelector<HTMLTableElement>(
@@ -44,25 +44,23 @@ export function handleClassListPage() {
     ).value
     if (!classSearchValue) return
 
-    const data = await getUdiseClassStudents(classSearchValue)
-    const rows = document.querySelector<HTMLTableSectionElement>(
-      'app-student-tracking-cy table > tbody',
+    const rows = document.querySelectorAll<HTMLTableRowElement>(
+      'app-student-tracking-cy table > tbody > tr',
     )
-    for (let i = 0; i < data.length; i++) {
-      const student = data[i]
-      const tr = rows?.children[i] as HTMLTableRowElement
-      const success = await completeStudentProfile(student.studentCodeNat, tr).catch((err) => {
-        console.info(
-          'Student with pen %s (%s) got error!\n',
-          student.studentCodeNat,
-          student.studentId,
-          err,
-        )
-        console.groupEnd()
 
-        return true
-      })
-      success && (await sleep(6000))
+    if (rows) {
+      for (const tr of rows) {
+        const pen = tr.querySelector('td:nth-child(2) p')?.textContent?.trim()
+        if (!pen) continue
+
+        await completeStudentProfile(pen, tr)
+      }
+    } else if (window.__udise_student_cache) {
+      for (const student of window.__udise_student_cache.values()) {
+        if (student.classId !== +classSearchValue) continue
+
+        await completeStudentProfile(student.studentCodeNat)
+      }
     }
 
     console.log(`🎉 Class ${classSearchValue} is all complete!`)
