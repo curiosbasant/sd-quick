@@ -1,4 +1,4 @@
-import { UdiseClassStudent, udiseGet, udisePost } from './profile.utils'
+import { handleResult, UdiseClassStudent, udiseGet, udisePost } from './profile.utils'
 
 export type Step2 = 'srn' | 'doa' | 'rollNumber'
 
@@ -6,6 +6,12 @@ export async function completeStudentEnrolmentProfile(
   profile: UdiseClassStudent,
   payload: Record<Step2, string>,
 ) {
+  if (!payload.rollNumber) throw new Error('No roll number assigned!')
+  const result = await abc(profile, payload)
+  return handleResult(result, '☑️ Enrolment Profile Completed!')
+}
+
+async function abc(profile: UdiseClassStudent, payload: Record<Step2, string>) {
   const result = await udiseGet<any>(
     `https://sdms.udiseplus.gov.in/p2/api/v2/students/enrolment/${profile.studentId}`,
   )

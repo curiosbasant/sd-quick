@@ -17,15 +17,7 @@ export function handleClassListPage() {
     const pen = target.textContent?.trim()
     if (!pen) return
 
-    console.log('Filling profile with pen ', pen)
-    try {
-      await completeStudentProfile(pen, td.parentElement as HTMLTableRowElement)
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      console.error(errorMessage)
-      alert(errorMessage)
-      console.groupEnd()
-    }
+    await completeStudentProfile(pen, td.parentElement as HTMLTableRowElement)
   })
 
   //
@@ -72,7 +64,9 @@ export function handleClassListPage() {
       })
       success && (await sleep(6000))
     }
-    console.info('🎉 Class %s is all complete!', classSearchValue)
+
+    console.log(`🎉 Class ${classSearchValue} is all complete!`)
+    await sleep(500)
     alert(`🎉 Class ${classSearchValue} is all complete!`)
   })
 }

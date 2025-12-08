@@ -1,5 +1,5 @@
 import { sleep } from '~/utils'
-import { UdiseClassStudent, udisePost } from './profile.utils'
+import { handleResult, UdiseClassStudent, udisePost } from './profile.utils'
 
 export type Step1 = 'fName' | 'mName' | 'dob' | 'gender' | 'mobileNumber' | 'address' | 'category'
 
@@ -7,6 +7,11 @@ export async function completeStudentGeneralProfile(
   profile: UdiseClassStudent,
   payload: Record<Step1, string>,
 ) {
+  const result = await abc(profile, payload)
+  return handleResult(result, '☑️ General Profile Completed!')
+}
+
+async function abc(profile: UdiseClassStudent, payload: Record<Step1, string>) {
   const options = {
     classId: profile.classId,
     sectionId: profile.sectionId,
@@ -78,10 +83,7 @@ export async function completeStudentGeneralProfile(
   await sleep(3000)
 
   // try with dummy number
-  result = await makeRequest({
-    primaryMobile: '9999999999',
-    secondaryMobile: '',
-  })
+  result = await makeRequest({ primaryMobile: '9999999999', secondaryMobile: '' })
 
   return result
 }

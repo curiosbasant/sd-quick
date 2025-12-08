@@ -3,12 +3,7 @@ import { completeStudentGeneralProfile } from './profile.step-1'
 import { completeStudentEnrolmentProfile } from './profile.step-2'
 import { completeStudentFacilityProfile } from './profile.step-3'
 import { completeStudentProfilePreview, completeStudentVocationalProfile } from './profile.step-4'
-import {
-  getShalaDarpanStudent,
-  getUdiseClassStudents,
-  UdiseClassStudent,
-  UdiseResult,
-} from './profile.utils'
+import { getShalaDarpanStudent, getUdiseClassStudents, UdiseClassStudent } from './profile.utils'
 
 export async function completeStudentProfile(pen: string, tr?: HTMLTableRowElement) {
   const selectedClass = document.querySelector<HTMLSelectElement>(
@@ -35,52 +30,52 @@ export async function completeStudentProfile(pen: string, tr?: HTMLTableRowEleme
 
   // skip if already completed
   if (udiseStudent.formStatus >= steps.length) {
-    console.info(
-      '✅ Profile already completed for pen %s with studentId %s!',
-      pen,
-      udiseStudent.studentId,
-    )
-    return false
+    console.log(`✅ Profile is already completed for ${sdStudent.studentName} with pen ${pen}!`)
+    return
   }
 
-  const lastTd = tr?.lastElementChild as HTMLTableCellElement
-  console.group(`📝 $s (%s)`, sdStudent.studentName, udiseStudent.studentId)
-  console.info('🚀 Starting profile for pen %s with studentId %s', pen, udiseStudent.studentId)
-  for (let index = udiseStudent.formStatus; index < steps.length; index++) {
-    const completeProfileStep = steps[index]
-    await completeProfileStep(udiseStudent, sdStudent).then(handleResult)
-    lastTd?.children[index].classList.add('submit')
-    lastTd?.children[index].classList.remove('incomplete')
-    console.info(`✔️ Step ${index + 1} completed!`)
-    await sleep(randomBetween(400, 700)) // Slow down a bit
+  try {
+    console.group(`📝 Working on %s, (%s,%s)`, sdStudent.studentName, pen, udiseStudent.studentId)
+    tr?.classList.add('inProgress')
+
+    const lastTd = tr?.lastElementChild as HTMLTableCellElement
+    for (let index = udiseStudent.formStatus; index < steps.length; index++) {
+      const completeProfileStep = steps[index]
+      await completeProfileStep(udiseStudent, sdStudent).then(console.info)
+      lastTd?.children[index].classList.add('submit')
+      lastTd?.children[index].classList.remove('incomplete')
+      await sleep(randomBetween(500, 800)) // Slow down a bit
+    }
+
+    // Last step, complete profile
+    await completeStudentProfilePreview(udiseStudent).then(console.info)
+    // get last 2nd element, as the last element is ul list
+    const img = lastTd?.children[lastTd.childElementCount - 2]
+      ?.firstElementChild as HTMLImageElement
+    img && (img.src = './assets/img/complete.png')
+
+    await sleep(randomBetween(500, 800)) // Slow down a bit
+    // mark row as completed
+    const statusTd = tr?.lastElementChild?.previousElementSibling?.firstElementChild
+    if (statusTd) {
+      statusTd.textContent = 'Completed'
+      statusTd.classList = 'Completed'
+    }
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : String(err)
+    if (tr) {
+      const p = document.createElement('p')
+      p.textContent = errorMessage
+      p.style.color = '#fb5454'
+      p.style.fontSize = 'smaller'
+      p.style.margin = '8px 0 0'
+      tr.children[5].appendChild(p)
+    }
+    console.error(err)
+  } finally {
+    console.groupEnd()
+    tr?.classList.remove('inProgress')
   }
-
-  // Last step, complete profile
-  await completeStudentProfilePreview(udiseStudent).then(handleResult)
-  // get last 2nd element, as the last element is ul list
-  const img = lastTd?.children[lastTd.childElementCount - 2]?.firstElementChild as HTMLImageElement
-  img && (img.src = './assets/img/complete.png')
-  console.info('🎉 Profile completed!')
-  console.groupEnd()
-
-  // mark row as completed
-  const statusTd = tr?.lastElementChild?.previousElementSibling?.firstElementChild
-  if (statusTd) {
-    statusTd.textContent = 'Completed'
-    statusTd.classList = 'Completed'
-  }
-
-  return true
-}
-
-function handleResult(result: UdiseResult) {
-  if (result.status) return result.data
-  const fieldErrorMessages =
-    result.error.data
-    && Object.values(result.error.data.errorFields)
-      .map((m) => `\n -- ${m}`)
-      .join()
-  throw new Error((result.error.message || 'Unknown error occurred') + (fieldErrorMessages ?? ''))
 }
 
 async function getUdiseStudent(cl: string, pen: string) {

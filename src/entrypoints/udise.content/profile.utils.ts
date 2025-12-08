@@ -131,6 +131,17 @@ export function udisePost<T>(url: string | URL, payload: unknown) {
     credentials: 'include',
   }).then<UdiseResult<T>>(responseJson)
 }
+
+export function handleResult<T>(result: UdiseResult, message: T) {
+  if (result.status) return message
+  const fieldErrorMessages =
+    result.error.data
+    && Object.values(result.error.data.errorFields)
+      .map((m) => `\n -- ${m}`)
+      .join()
+  throw new Error((result.error.message || 'Unknown error occurred') + (fieldErrorMessages ?? ''))
+}
+
 export type UdiseResult<T = any> =
   | {
       status: true

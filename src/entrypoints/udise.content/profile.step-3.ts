@@ -1,4 +1,4 @@
-import { UdiseClassStudent, udisePost } from './profile.utils'
+import { handleResult, UdiseClassStudent, udisePost } from './profile.utils'
 
 export type Step3 = 'schoolDistance' | 'age' | 'gender'
 
@@ -11,7 +11,7 @@ export async function completeStudentFacilityProfile(
     payload.gender === 'M' ? 'male' : 'female',
   )
 
-  return udisePost(
+  const result = await udisePost(
     `https://sdms.udiseplus.gov.in/p2/api/v2/AY/students/facility/${profile.studentId}`,
     {
       schoolId: profile.schoolId,
@@ -44,6 +44,7 @@ export async function completeStudentFacilityProfile(
       fatherUuidUpdateYN: 9,
     },
   )
+  return handleResult(result, '☑️ Facility Profile Completed!')
 }
 function calculateFacilitiesProvided(cls: number, schoolDistance: number, isGirl: boolean) {
   // Free Textbooks for all classes
