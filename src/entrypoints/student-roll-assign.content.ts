@@ -12,16 +12,9 @@ export default {
 
         const generateButton = createButton({
           className: 'btn btn-info',
-          title: 'Assign all roll numbers in sequence based on class',
+          title: 'Assign roll numbers in sequence for empty fields',
           children: 'Assign Rolls',
-          onClick: () => {
-            const std = getClass()
-            document
-              .querySelectorAll<HTMLInputElement>(
-                '[id^=ContentPlaceHolder1_grdStudentRollGrid_RollNumberTextBox]',
-              )
-              .forEach((inp, i) => (inp.value = std * 100 + i + 1 + ''))
-          },
+          onClick: () => handleAssigningRolls(getClass()),
           signal: ctx.signal,
         })
         con?.replaceChildren(generateButton)
@@ -32,6 +25,21 @@ export default {
     ui.autoMount()
   },
 } satisfies ContentScriptDefinition
+
+function handleAssigningRolls(classValue: number) {
+  const fields = document.querySelectorAll<HTMLInputElement>(
+    '[id^=ContentPlaceHolder1_grdStudentRollGrid_RollNumberTextBox]',
+  )
+  let maxRoll = classValue * 100
+  for (const field of fields) {
+    const value = +field.value
+    if (value > maxRoll) maxRoll = value
+  }
+  for (const field of fields) {
+    if (field.value) continue
+    field.value = String(++maxRoll)
+  }
+}
 
 function getClass() {
   const classValue =
