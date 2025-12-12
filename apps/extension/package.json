@@ -1,5 +1,5 @@
 {
-  "name": "sd-quick",
+  "name": "@sd-quick/extension",
   "description": "Quick actions for ShalaDarpan quirks",
   "version": "0.0.0-semantic-release",
   "type": "module",
