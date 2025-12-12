@@ -12,12 +12,9 @@ export async function completeStudentEnrolmentProfile(
 }
 
 async function abc(profile: UdiseClassStudent, payload: Record<Step2, string>) {
-  const result = await udiseGet<any>(
-    `https://sdms.udiseplus.gov.in/p2/api/v2/students/enrolment/${profile.studentId}`,
-  )
-  if (!result.status) return result
+  const { attendancePy, classPY, enrStatusPY, examMarksPy, examResultPy, enrUnder } =
+    await getEnrolmentProfile(profile)
 
-  const { attendancePy, classPY, enrStatusPY, examMarksPy, examResultPy, enrUnder } = result.data
   return udisePost(
     `https://sdms.udiseplus.gov.in/p2/api/v2/students/enrolment/${profile.studentId}`,
     {
@@ -39,4 +36,24 @@ async function abc(profile: UdiseClassStudent, payload: Record<Step2, string>) {
       enrUnder,
     },
   )
+}
+
+async function getEnrolmentProfile(profile: UdiseClassStudent) {
+  if (profile.classId === 1) {
+    return {
+      attendancePy: 0,
+      classPY: 99,
+      enrStatusPY: 4,
+      examMarksPy: 999,
+      examResultPy: 0,
+      enrUnder: null,
+    }
+  }
+
+  const result = await udiseGet<any>(
+    `https://sdms.udiseplus.gov.in/p2/api/v2/students/enrolment/${profile.studentId}`,
+  )
+  if (!result.status) return result
+
+  return result.data
 }

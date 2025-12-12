@@ -23,7 +23,7 @@ async function abc(profile: UdiseClassStudent, payload: Record<Step1, string>) {
     fatherName: payload.fName || profile.fatherName,
     guardianName: profile.guardianName,
     address: payload.address || profile.address,
-    pincode: profile.pincode,
+    pincode: profile.pincode || 342301,
     primaryMobile: payload.mobileNumber || profile.primaryMobile,
     secondaryMobile:
       payload.mobileNumber && payload.mobileNumber === profile.primaryMobile ?
@@ -33,20 +33,20 @@ async function abc(profile: UdiseClassStudent, payload: Record<Step1, string>) {
     email: profile.email,
     motherTongue: profile.motherTongue || 56, // marwari
     socCatId: getMatchingPosition(['GEN', 'SC', 'ST', 'OBC'], profile.socCatId, payload.category),
-    minorityId: profile.minorityId,
-    isBplYN: profile.isBplYN,
-    aayBplYN: profile.aayBplYN,
-    ewsYN: profile.ewsYN,
-    cwsnYN: profile.cwsnYN,
-    natIndYN: profile.natIndYN,
+    minorityId: profile.minorityId || 7, // NA
+    isBplYN: defaultNo(profile.isBplYN),
+    aayBplYN: profile.aayBplYN || 9,
+    ewsYN: defaultNo(profile.ewsYN),
+    cwsnYN: profile.cwsnYN || 2,
+    natIndYN: 1,
     impairmentType: profile.impairmentType,
-    impairmentPercent: profile.impairmentPercent,
+    impairmentPercent: profile.impairmentPercent || '',
     disabilityCerti: profile.disabilityCerti,
-    ooscMainstreamedYN: profile.ooscMainstreamedYN,
-    ooscYN: profile.ooscYN,
+    ooscMainstreamedYN: profile.ooscMainstreamedYN || '9',
+    ooscYN: defaultNo(profile.ooscYN),
     studentCodeState: profile.studentCodeState,
     bloodGroup: profile.bloodGroup || 9, // under investigation
-    ageCheckSkipped: profile.ageCheckSkipped,
+    ageCheckSkipped: profile.ageCheckSkipped || 2,
     uuid: '',
     nameAsUuid: '',
     uuidUpdateYN: 2, //
@@ -92,4 +92,8 @@ function getMatchingPosition<T>(list: T[], defaultValue: number, value?: T) {
   if (!value) return defaultValue
   const idx = list.indexOf(value)
   return idx === -1 ? defaultValue : idx + 1
+}
+
+function defaultNo(value: number) {
+  return !value || value === 9 ? 2 : value
 }

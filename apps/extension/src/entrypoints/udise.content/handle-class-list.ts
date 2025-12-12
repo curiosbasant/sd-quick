@@ -12,9 +12,9 @@ export function handleClassListPage() {
 
     const target = ev.target as HTMLElement
     const td = target.closest('td')
-    if (td?.cellIndex !== 1 || target.nodeName !== 'P') return
-
-    const pen = target.textContent?.trim()
+    if (td?.cellIndex !== 2) return
+    const pen = target.textContent?.trim().toLowerCase()
+    console.log(pen, window.__udise_student_cache, window.__sd_profiles_cache)
     if (!pen) return
 
     await completeStudentProfile(pen, td.parentElement as HTMLTableRowElement)

@@ -8,9 +8,11 @@ export async function getShalaDarpanStudent(pen: string) {
   if (!studentProfileRaw) studentProfileRaw = await refreshShalaDarpanDetails()
   window.__sd_profiles_cache ??= new Map()
 
-  const lines = studentProfileRaw.split(navigator.userAgent.includes('Windows') ? '\r\n' : '\n')
-  const data = lines.find((r) => r.includes(pen))?.split('\t')
-  if (!data?.[0]) throw new Error(`ShalaDarpan details for pen ${pen} not found!`)
+  const records = studentProfileRaw.split(navigator.userAgent.includes('Windows') ? '\r\n' : '\n')
+  const data = records.find((r) => r.toLowerCase().includes(pen))?.split('\t')
+  console.log(data)
+
+  if (!data?.[3]) throw new Error(`ShalaDarpan details for pen ${pen} not found!`)
 
   const [
     _pen, // unused
@@ -47,14 +49,14 @@ export async function getShalaDarpanStudent(pen: string) {
   return studentData
 }
 
-export async function getUdiseStudent(pen: string) {
+export async function getUdiseStudent(key: string) {
   const cacheSize = window.__udise_student_cache?.size ?? 0
   if (cacheSize === 0) await cacheUdiseStudents()
 
-  const student = window.__udise_student_cache?.get(pen)
+  const student = window.__udise_student_cache?.get(key)
   if (student) return student
 
-  throw new Error(`UDISE+ student with pen ${pen} not found!`)
+  throw new Error(`${key}: UDISE+ Student not found!`)
 }
 
 async function cacheUdiseStudents() {
@@ -65,7 +67,8 @@ async function cacheUdiseStudents() {
 
   window.__udise_student_cache ??= new Map()
   for (const student of result.data) {
-    window.__udise_student_cache.set(student.studentCodeNat, student)
+    const key = student.classId === 1 ? student.studentName.toLowerCase() : student.studentCodeNat
+    window.__udise_student_cache.set(key, student)
   }
 }
 
