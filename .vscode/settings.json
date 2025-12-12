@@ -1,7 +1,7 @@
 {
   "conventionalCommits.promptBody": false,
   "conventionalCommits.promptFooter": false,
-  "conventionalCommits.promptScopes": false,
+  "conventionalCommits.scopes": ["ext", "mobile"],
   "cSpell.words": ["conventionalcommits", "ShalaDarpan"],
   "tailwindCSS.classFunctions": ["(.+).classList.(add|remove)"],
   "tailwindCSS.experimental.classRegex": [["className ?\\=([^;]*)", "'([^']*)'"]],

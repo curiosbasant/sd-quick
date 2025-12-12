@@ -9,7 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "~54.0.28",
+    "expo": "~54.0.29",
     "expo-constants": "~18.0.12",
     "expo-linking": "~8.0.10",
     "expo-router": "~6.0.19",
@@ -20,7 +20,7 @@
     "react-native-screens": "~4.16.0"
   },
   "devDependencies": {
-    "@types/react": "~19.1.0",
+    "@types/react": "~19.1.10",
     "typescript": "~5.9.2"
   },
   "private": true
