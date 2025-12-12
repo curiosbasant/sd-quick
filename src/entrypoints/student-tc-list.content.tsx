@@ -1,56 +1,93 @@
+import { createRoot } from 'react-dom/client'
+
 export default defineContentScript({
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/SchoolTcReport.aspx'],
   main(ctx) {
     createIntegratedUi(ctx, {
       position: 'inline',
       anchor: '#ContentPlaceHolder1_grdSummary tr:nth-child(2)',
-      onMount: (wrapper) => {
-        const panel = document.querySelector('.panel-body:has(#ContentPlaceHolder1_Button1)')
-        if (!panel) return
-
-        panel.appendChild(wrapper)
-        wrapper.classList.add('row')
-        wrapper.innerHTML = `
-          <div class="tw:grid tw:grid-cols-3 tw:mt-8 tw:items-center tw:gap-4">
-            <span class="control-label">Filter By Date</span>
-            <input class="form-control" type="date">
-            <button class="btn btn-primary btn-sm" type="button">Filter</button>
-          </div>
-        `
-        ctx.addEventListener(wrapper.querySelector('button')!, 'click', (ev) => {
-          const button = ev.currentTarget as HTMLButtonElement
-          const input = button.previousElementSibling as HTMLInputElement
-          input && filterTableByDate(new Date(input.value))
-        })
+      append(_, wrapper) {
+        document.querySelector('#dvReport')?.insertAdjacentElement('beforebegin', wrapper)
+      },
+      onMount(wrapper) {
+        const root = createRoot(wrapper)
+        root.render(
+          <div className='tw:mt-8 tw:grid tw:grid-cols-4 tw:items-center tw:gap-4'>
+            <span className='control-label'>Filter By Date</span>
+            <DateRangePicker />
+            <button
+              className='btn btn-primary btn-sm'
+              onClick={(ev) => {
+                const button = ev.currentTarget as HTMLButtonElement
+                const endDateInput = button.previousElementSibling as HTMLInputElement
+                endDateInput && filterTableByDate(new Date(endDateInput.value))
+              }}
+              type='button'>
+              Filter
+            </button>
+          </div>,
+        )
+        return root
+      },
+      onRemove(root) {
+        root?.unmount()
       },
     }).autoMount()
   },
 })
+
+function DateRangePicker() {
+  const [startDate, setStartDate] = useState<string | null>(null)
+  // const [endDate, setEndDate] = useState<string | null>(null)
+
+  return (
+    <>
+      <input
+        className='form-control'
+        onChange={(ev) => setStartDate(ev.target.value)}
+        placeholder='Start Date'
+        type='date'
+      />
+      <input
+        className='form-control'
+        min={startDate ?? undefined}
+        placeholder='End Date'
+        type='date'
+      />
+    </>
+  )
+}
 
 function filterTableByDate(filterDate: Date) {
   const tbody = document.querySelector<HTMLTableElement>('#ContentPlaceHolder1_grdSummary tbody')
   if (!tbody) return
 
   const headerRow = tbody.firstElementChild as HTMLTableRowElement
-  const lastClassTd = headerRow?.cells.item(6)
+  const lastClassTd = headerRow?.cells[6]
   if (!lastClassTd) return
   lastClassTd.textContent = 'Last Class'
 
   const formattedDate = filterDate.toLocaleDateString().replace(/\//g, '-')
 
   if (headerRow.childElementCount > 9) {
+    document
+      .querySelectorAll<HTMLElement>('#ContentPlaceHolder1_head, #tblreport1')
+      .forEach((elem) => elem.style.removeProperty('display'))
+    document
+      .querySelectorAll<HTMLElement>('.header')
+      .forEach((elem) => (elem.style.height = 'auto'))
+
     for (let i = 0; i < tbody.childElementCount; i++) {
-      const row = tbody.children.item(i) as HTMLTableRowElement
-      const tcDate = row?.cells.item(2)
-      if (tcDate) {
-        tcDate.style.display = 'none'
-        const trimmedDate = tcDate.textContent?.trim()
-        if (trimmedDate) {
-          tcDate.textContent = trimmedDate
-        }
+      const row = tbody.children[i] as HTMLTableRowElement
+      if (!row) continue
+      const bookNoCell = row.cells[1]
+      if (bookNoCell) {
+        bookNoCell.classList.add('tw:hidden')
+        bookNoCell.after(row.cells[4], row.cells[6], row.cells[5]) // move srno, last class, last session
       }
-      row.lastElementChild?.remove()
-      row.lastElementChild?.remove()
+
+      row.lastElementChild?.remove() // remove action button cell
+      row.lastElementChild?.remove() // remove duplicate tc date cell
     }
 
     document
@@ -65,14 +102,15 @@ function filterTableByDate(filterDate: Date) {
   }
 
   for (let i = 1, c = 0; i < tbody.childElementCount; i++) {
-    const row = tbody.children.item(i) as HTMLTableRowElement
-    const tcDate = row?.cells.item(2)?.textContent
+    const row = tbody.children[i] as HTMLTableRowElement
+    const tcDate = row?.cells[2]?.textContent?.trim()
 
     if (!formattedDate || tcDate === formattedDate) {
-      row.style.removeProperty('display')
-      row.firstElementChild && (row.firstElementChild.textContent = String(++c))
+      row.classList.remove('tw:hidden')
+      // add numbering
+      row.firstElementChild?.replaceChildren(String(++c))
     } else {
-      row.style.display = 'none'
+      row.classList.add('tw:hidden')
     }
   }
 }
