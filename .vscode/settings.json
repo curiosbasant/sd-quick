@@ -6,7 +6,8 @@
   "tailwindCSS.classFunctions": ["(.+).classList.(add|remove)"],
   "tailwindCSS.experimental.classRegex": [["className ?\\=([^;]*)", "'([^']*)'"]],
   "tailwindCSS.experimental.configFile": {
-    "src/assets/tailwind.css": "src/entrypoints/*.content.ts"
+    "apps/extenstion/src/assets/tailwind.css": "apps/extenstion/src/entrypoints/*.content.ts",
+    "apps/mobile/src/styles.css": "apps/mobile/src/**/*.tsx"
   },
   "typescript.tsdk": "node_modules/typescript/lib"
 }
