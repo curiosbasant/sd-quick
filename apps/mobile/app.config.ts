@@ -43,6 +43,7 @@ export default function defineConfig({ config }: ConfigContext): ExpoConfig {
 
     // Settings
     experiments: {
+      reactCompiler: true,
       typedRoutes: true,
     },
     extra: {
