@@ -37,6 +37,5 @@
     "typescript": "^5.8.3",
     "wxt": "^0.20.6"
   },
-  "packageManager": "pnpm@10.12.1",
   "private": true
 }

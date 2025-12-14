@@ -1,43 +1,37 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config'
 
+const EXPO_PROJECT_ID = '1171c42c-2483-48f6-a87c-e0427167a3a2',
+  EXPO_PROJECT_SLUG = 'sd-quick',
+  EXPO_PROJECT_OWNER = 'curiosbasant',
+  PROJECT_GITHUB_URL = 'https://github.com/curiosbasant/sd-quick.git'
+
 export default function defineConfig({ config }: ConfigContext): ExpoConfig {
-  // Fallback to production environment
-  const appName = process.env.APP_NAME || 'SD Quick'
-  const appPackageId = process.env.APP_PACKAGE_ID || 'com.curios.sd-quick'
-  const appIcon = process.env.APP_ICON || './assets/brand/icon.png'
-  const appAdaptiveIcon = process.env.APP_ADAPTIVE_ICON || './assets/brand/adaptive-icon.png'
-
-  const appSplashImage = process.env.APP_SLASH_IMAGE || './assets/brand/splash-icon.png'
-
-  const expoProjectId = process.env.EXPO_PROJECT_ID || ''
+  const app = getDynamicAppConfig(process.env.APP_VARIANT || 'development')
 
   return {
     ...config,
     // App details
-    name: appName,
+    name: app.name,
     version: '0.1.0',
-    slug: 'sd-quick',
-    scheme: 'sd-quick',
+    scheme: app.scheme,
     description: 'A Quick app to make working shaladarpan easier',
     orientation: 'portrait',
-    icon: appIcon,
+    icon: app.icon,
     splash: {
-      image: appSplashImage,
+      image: app.splashImage,
       resizeMode: 'contain',
     },
-    userInterfaceStyle: 'automatic',
 
     // Platform specific
     android: {
-      package: appPackageId,
+      package: app.packageId,
       adaptiveIcon: {
-        foregroundImage: appAdaptiveIcon,
+        foregroundImage: app.adaptiveIcon,
         backgroundColor: '#FFFFFF',
       },
-      edgeToEdgeEnabled: true,
-      predictiveBackGestureEnabled: false,
     },
     ios: {
+      bundleIdentifier: app.packageId,
       supportsTablet: true,
     },
 
@@ -51,18 +45,51 @@ export default function defineConfig({ config }: ConfigContext): ExpoConfig {
         origin: false,
       },
       eas: {
-        projectId: expoProjectId,
+        projectId: EXPO_PROJECT_ID,
       },
     },
-    githubUrl: 'https://github.com/curiosbasant/sd-quick.git',
+    githubUrl: PROJECT_GITHUB_URL,
+    slug: EXPO_PROJECT_SLUG || 'set EXPO_PROJECT_SLUG',
     // Required to auto build by expo for this "extra.eas.projectId"
-    owner: 'curiosbasant',
+    owner: EXPO_PROJECT_OWNER,
     plugins: ['expo-router'],
     runtimeVersion: {
       policy: 'appVersion',
     },
     updates: {
-      url: 'https://u.expo.dev/' + expoProjectId,
+      url: 'https://u.expo.dev/' + EXPO_PROJECT_ID,
     },
+  }
+}
+
+const getDynamicAppConfig = (environment: string) => {
+  switch (environment) {
+    case 'production':
+      return {
+        name: 'SD Quick',
+        scheme: 'sd-quick',
+        packageId: 'com.curios.sdquick',
+        icon: './assets/brand/icon.png',
+        adaptiveIcon: './assets/brand/adaptive-icon.png',
+        splashImage: './assets/brand/splash-icon.png',
+      }
+    case 'preview':
+      return {
+        name: 'SD Quick (Preview)',
+        scheme: 'sd-quick-preview',
+        packageId: 'com.curios.sdquick.preview',
+        icon: './assets/brand/icon.png',
+        adaptiveIcon: './assets/brand/adaptive-icon.png',
+        splashImage: './assets/brand/splash-icon.png',
+      }
+    default:
+      return {
+        name: 'SD Quick (Dev)',
+        scheme: 'sd-quick-dev',
+        packageId: 'com.curios.sdquick.dev',
+        icon: './assets/brand/icon.png',
+        adaptiveIcon: './assets/brand/adaptive-icon.png',
+        splashImage: './assets/brand/splash-icon.png',
+      }
   }
 }
