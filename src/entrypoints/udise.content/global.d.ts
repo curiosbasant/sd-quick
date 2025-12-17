@@ -1,7 +1,7 @@
-import { Step1 } from './profile.step-1'
-import { Step2 } from './profile.step-2'
-import { Step3 } from './profile.step-3'
-import { UdiseClassStudent } from './profile.utils'
+import { Step1 } from './profile-update/profile.step-1'
+import { Step2 } from './profile-update/profile.step-2'
+import { Step3 } from './profile-update/profile.step-3'
+import { UdiseClassStudent } from './utils'
 
 declare global {
   interface Window {

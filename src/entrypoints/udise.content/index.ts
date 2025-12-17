@@ -1,5 +1,5 @@
 import type { ContentScriptDefinition } from 'wxt'
-import { handleClassListPage } from './handle-class-list'
+import { handleProfileUpdate } from './profile-update'
 
 export default {
   matches: ['https://sdms.udiseplus.gov.in/*'],
@@ -14,7 +14,6 @@ export default {
 
 function checkUrlHash(hash: string) {
   if (/#\/school\/(\d+)\/viewStudentDetails\/cy\/(\d+)/.test(hash)) {
-    console.log('handleClassListPage called')
-    handleClassListPage()
+    handleProfileUpdate()
   }
 }

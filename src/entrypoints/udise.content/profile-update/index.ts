@@ -1,12 +1,12 @@
 import { sleep } from '~/utils'
 import { completeStudentProfile } from './profile.complete'
-import { refreshShalaDarpanDetails } from './profile.utils'
+import { refreshShalaDarpanDetails } from '../utils'
 
-export function handleClassListPage() {
+export function handleProfileUpdate() {
+  // complete single student profile
   const tbody = document.querySelector<HTMLTableElement>(
     'app-student-tracking-cy div.example-container.table-responsive tbody',
   )
-
   tbody?.addEventListener('click', async (ev) => {
     if (!ev.altKey) return
 
@@ -15,27 +15,23 @@ export function handleClassListPage() {
     if (td?.cellIndex !== 1 || target.nodeName !== 'P') return
 
     const pen = target.textContent?.trim()
-    if (!pen) return
-
-    await completeStudentProfile(pen, td.parentElement as HTMLTableRowElement)
+    if (pen) await completeStudentProfile(pen, td.parentElement as HTMLTableRowElement)
   })
 
-  //
+  // refresh shaladarpan cache details
   const schoolHead = document.querySelector<HTMLUListElement>(
     'app-welcome-user-details1 ul.WelcomeSchool',
   )
   if (!schoolHead) console.error('school head not found!')
-
   schoolHead?.addEventListener('click', async (ev) => {
     if (ev.altKey) await refreshShalaDarpanDetails()
   })
 
-  //
+  // complete all students in a class
   const classSearchLabelListItem = document.querySelector<HTMLUListElement>(
     'app-student-tracking-cy ul.sectionSearch > li',
   )
   if (!classSearchLabelListItem) console.error('classSearchLabelListItem not found!')
-
   classSearchLabelListItem?.addEventListener('click', async (ev) => {
     if (!ev.altKey) return
 

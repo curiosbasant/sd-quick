@@ -1,4 +1,4 @@
-import { handleResult, UdiseClassStudent, udisePost } from './profile.utils'
+import { handleResult, UdiseClassStudent, udisePost } from '../utils'
 
 export type Step3 = 'schoolDistance' | 'age' | 'gender'
 

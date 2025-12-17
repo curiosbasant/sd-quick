@@ -1,4 +1,4 @@
-import { handleResult, UdiseClassStudent, udisePost } from './profile.utils'
+import { handleResult, UdiseClassStudent, udisePost } from '../utils'
 
 // Only for class 9 and 10 class
 export async function completeStudentVocationalProfile(profile: UdiseClassStudent) {

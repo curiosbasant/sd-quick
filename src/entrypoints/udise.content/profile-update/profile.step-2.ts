@@ -1,4 +1,4 @@
-import { handleResult, UdiseClassStudent, udiseGet, udisePost } from './profile.utils'
+import { handleResult, UdiseClassStudent, udiseGet, udisePost } from '../utils'
 
 export type Step2 = 'srn' | 'doa' | 'rollNumber'
 
