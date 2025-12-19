@@ -24,7 +24,7 @@ const config = {
   // Tailwind Config
   tailwindStylesheet: './src/assets/tailwind.css',
 
-  // tailwindFunctions: ['cn', 'cva', 'tv'],
+  tailwindFunctions: ['cn', 'cx', 'tv'],
 }
 
 export default config
