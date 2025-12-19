@@ -1,11 +1,18 @@
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
+import { logMessage } from '~/actions'
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style='auto' />
+      <Text
+        onPress={() => {
+          logMessage('Hello from the client!')
+        }}>
+        Log Message
+      </Text>
     </View>
   )
 }

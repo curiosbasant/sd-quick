@@ -38,12 +38,10 @@ export default function defineConfig({ config }: ConfigContext): ExpoConfig {
     // Settings
     experiments: {
       reactCompiler: true,
+      reactServerFunctions: true,
       typedRoutes: true,
     },
     extra: {
-      router: {
-        origin: false,
-      },
       eas: {
         projectId: EXPO_PROJECT_ID,
       },
