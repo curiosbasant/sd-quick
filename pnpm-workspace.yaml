@@ -1,4 +1,5 @@
 packages:
   - apps/*
+  - tooling/*
 
 nodeLinker: hoisted

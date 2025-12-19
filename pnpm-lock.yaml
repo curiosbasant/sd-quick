@@ -9,7 +9,11 @@ overrides:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      '@sd/prettier-config':
+        specifier: workspace:*
+        version: link:tooling/prettier
 
   apps/extension:
     dependencies:
@@ -41,12 +45,6 @@ importers:
       conventional-changelog-conventionalcommits:
         specifier: ^9.0.0
         version: 9.1.0
-      prettier:
-        specifier: ^3.5.3
-        version: 3.7.4
-      prettier-plugin-tailwindcss:
-        specifier: ^0.6.12
-        version: 0.6.14(prettier@3.7.4)
       semantic-release:
         specifier: ^24.2.4
         version: 24.2.9(typescript@5.9.3)
@@ -54,7 +52,7 @@ importers:
         specifier: ^4.1.5
         version: 4.1.18
       typescript:
-        specifier: ^5.8.3
+        specifier: ~5.9.2
         version: 5.9.3
       wxt:
         specifier: ^0.20.6
@@ -120,6 +118,18 @@ importers:
       typescript:
         specifier: ~5.9.2
         version: 5.9.3
+
+  tooling/prettier:
+    dependencies:
+      '@ianvs/prettier-plugin-sort-imports':
+        specifier: ^4.4.2
+        version: 4.7.0(prettier@3.7.4)
+      prettier:
+        specifier: ^3.5.3
+        version: 3.7.4
+      prettier-plugin-tailwindcss:
+        specifier: ^0.6.12
+        version: 0.6.14(@ianvs/prettier-plugin-sort-imports@4.7.0(prettier@3.7.4))(prettier@3.7.4)
 
 packages:
 
@@ -958,6 +968,24 @@ packages:
   '@expo/xcpretty@4.3.2':
     resolution: {integrity: sha512-ReZxZ8pdnoI3tP/dNnJdnmAk7uLT4FjsKDGW7YeDdvdOMz2XCQSmSCM9IWlrXuWtMF9zeSB6WJtEhCQ41gQOfw==}
     hasBin: true
+
+  '@ianvs/prettier-plugin-sort-imports@4.7.0':
+    resolution: {integrity: sha512-soa2bPUJAFruLL4z/CnMfSEKGznm5ebz29fIa9PxYtu8HHyLKNE1NXAs6dylfw1jn/ilEIfO2oLLN6uAafb7DA==}
+    peerDependencies:
+      '@prettier/plugin-oxc': ^0.0.4
+      '@vue/compiler-sfc': 2.7.x || 3.x
+      content-tag: ^4.0.0
+      prettier: 2 || 3 || ^4.0.0-0
+      prettier-plugin-ember-template-tag: ^2.1.0
+    peerDependenciesMeta:
+      '@prettier/plugin-oxc':
+        optional: true
+      '@vue/compiler-sfc':
+        optional: true
+      content-tag:
+        optional: true
+      prettier-plugin-ember-template-tag:
+        optional: true
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -6709,6 +6737,17 @@ snapshots:
       find-up: 5.0.0
       js-yaml: 4.1.1
 
+  '@ianvs/prettier-plugin-sort-imports@4.7.0(prettier@3.7.4)':
+    dependencies:
+      '@babel/generator': 7.28.5
+      '@babel/parser': 7.28.5
+      '@babel/traverse': 7.28.5
+      '@babel/types': 7.28.5
+      prettier: 3.7.4
+      semver: 7.7.3
+    transitivePeerDependencies:
+      - supports-color
+
   '@img/colour@1.0.0': {}
 
   '@img/sharp-darwin-arm64@0.34.5':
@@ -10402,9 +10441,11 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  prettier-plugin-tailwindcss@0.6.14(prettier@3.7.4):
+  prettier-plugin-tailwindcss@0.6.14(@ianvs/prettier-plugin-sort-imports@4.7.0(prettier@3.7.4))(prettier@3.7.4):
     dependencies:
       prettier: 3.7.4
+    optionalDependencies:
+      '@ianvs/prettier-plugin-sort-imports': 4.7.0(prettier@3.7.4)
 
   prettier@3.7.4: {}
 

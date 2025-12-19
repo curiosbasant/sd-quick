@@ -3,7 +3,13 @@
   "conventionalCommits.promptFooter": false,
   "conventionalCommits.scopes": ["ext", "mobile"],
   "cSpell.words": ["conventionalcommits", "ShalaDarpan"],
-  "tailwindCSS.classFunctions": ["(.+).classList.(add|remove)"],
+  "editor.codeActionsOnSave": {
+    "source.sortImports": "never"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "tailwindCSS.classFunctions": ["(.+).classList.(add|remove)", "cn", "cx", "tv"],
   "tailwindCSS.experimental.classRegex": [["className ?\\=([^;]*)", "'([^']*)'"]],
   "tailwindCSS.experimental.configFile": {
     "apps/extenstion/src/assets/tailwind.css": "apps/extenstion/src/entrypoints/*.content.ts",

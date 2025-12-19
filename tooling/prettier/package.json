@@ -1,0 +1,16 @@
+{
+  "name": "@sd/prettier-config",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf node_modules",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.12"
+  },
+  "private": true
+}
