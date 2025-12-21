@@ -34,6 +34,9 @@ export default function defineConfig({ config }: ConfigContext): ExpoConfig {
       bundleIdentifier: app.packageId,
       supportsTablet: true,
     },
+    web: {
+      output: 'server',
+    },
 
     // Settings
     experiments: {

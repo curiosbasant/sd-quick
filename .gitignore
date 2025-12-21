@@ -48,3 +48,4 @@ app-example
 archive
 *.archive
 *.archive.*
+google-services.json
