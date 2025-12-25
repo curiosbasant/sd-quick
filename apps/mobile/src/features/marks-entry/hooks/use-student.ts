@@ -1,7 +1,6 @@
-import { use, useReducer } from 'react'
+import { useReducer } from 'react'
 
-import { addMarks } from './service'
-import { Params, ShaladarpanStudent } from './types'
+import { ShaladarpanStudent } from '../types'
 
 function reducer(
   draft: { students: ShaladarpanStudent[]; currentIndex: number },
@@ -28,16 +27,11 @@ function reducer(
   return draft
 }
 
-export function useStudent(studentsPromise: Promise<ShaladarpanStudent[]>) {
-  const students = use(studentsPromise)
-  const [{ students: optimisticStudents, currentIndex }, dispatch] = useReducer(reducer, {
-    students,
-    currentIndex: 0,
-  })
+export function useStudent(state: { students: ShaladarpanStudent[]; currentIndex: number }) {
+  const [{ students, currentIndex }, dispatch] = useReducer(reducer, state)
 
   return {
     students,
-    currentStudent: optimisticStudents[currentIndex],
     currentIndex,
     gotoPreviousStudent: () => dispatch({ type: 'previous' }),
     gotoNextStudent: () => dispatch({ type: 'next' }),

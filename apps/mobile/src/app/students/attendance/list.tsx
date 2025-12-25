@@ -1,7 +1,6 @@
 import { Suspense, use } from 'react'
 import { ListRenderItemInfo, Pressable, Text, View, VirtualizedList } from 'react-native'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
-import { useLiveQuery } from '@tanstack/react-db'
 
 import {
   classesMap,
@@ -9,15 +8,8 @@ import {
   Params,
   ShaladarpanStudent,
 } from '~/features/marks-entry'
-import { sdCollection } from '~/features/shared/collections/sd'
 
 export default function StudentsMarkListScreen() {
-  const { data } = useLiveQuery((q) => q.from({ sdCollection }))
-  console.log(data)
-
-  return <View className='h-full px-5 py-6'></View>
-}
-export function sStudentsMarkListScreen() {
   const params = useLocalSearchParams<Params>()
   const studentsPromise = getShaladarpanClassStudents(params)
 
