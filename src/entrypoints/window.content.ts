@@ -1,11 +1,10 @@
-import { ContentScriptDefinition } from 'wxt'
+import type { ContentScriptDefinition } from 'wxt'
 import { makeSdRequest } from '~/utils/request'
 
 declare global {
   interface Window {
     makeSdRequest: typeof makeSdRequest
     timeInSecondsAfterSessionOut: number
-    StartThisSessionTimer: () => void
   }
 }
 
@@ -15,5 +14,7 @@ export default {
   main() {
     // Expose utility functions
     window.makeSdRequest = makeSdRequest
+    // Infinite session timeout
+    window.timeInSecondsAfterSessionOut = Infinity
   },
 } satisfies ContentScriptDefinition
