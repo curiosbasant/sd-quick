@@ -113,7 +113,7 @@ export function printContent(...content: (Node | string)[]) {
   const printPopup = window.open(
     '',
     '',
-    'left=2,top=0,toolbar=0,scrollbars=1,status=1;width=350,height=250',
+    'left=2,top=0,toolbar=0,scrollbars=1,status=1,width=1000,height=800',
   )
 
   if (printPopup) {
