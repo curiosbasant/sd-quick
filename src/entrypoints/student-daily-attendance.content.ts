@@ -41,20 +41,12 @@ async function handleInputBlur(ev: FocusEvent) {
     ?.firstElementChild as HTMLInputElement
   if (!editBtn) return
 
-  const tempDiv = input.parentElement!.appendChild(document.createElement('div'))
   // This is to put extra required fields
-  tempDiv.innerHTML = `
-    <input name="ctl00$ScriptManager1" value="ctl00$ContentPlaceHolder1$UpdatePanel4|${
-      editBtn.name
-    }" type="hidden" readonly>
-    <input name="${editBtn.name}.x" value="${randomBetween(2, 20)}" readonly type="hidden">
-    <input name="${editBtn.name}.y" value="${randomBetween(2, 20)}" readonly type="hidden">
-  `
-
-  const promise = makeSdRequest()
-  // Remove immediately after making the request, so to avoid polluting subsequent requests
-  tempDiv.remove()
-  const res = await promise
+  const res = await makeSdRequest({
+    ctl00$ScriptManager1: 'ctl00$ContentPlaceHolder1$UpdatePanel4|' + editBtn.name,
+    [`${editBtn.name}.x`]: randomBetween(2, 20),
+    [`${editBtn.name}.y`]: randomBetween(2, 20),
+  })
   // Set tr backgroundColor
   input.parentElement!.parentElement!.style.backgroundColor = res ? 'green' : 'red'
 

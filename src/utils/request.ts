@@ -1,16 +1,27 @@
 import { parseHtmlString } from './parsers'
 
-export function makeSdRequest(url = location.href, payload = {}) {
-  const fd = new FormData(document.querySelector<HTMLFormElement>('#form1') ?? undefined)
-
-  for (const [key, value] of Object.entries<string>(payload)) {
-    fd.set(key, value)
-  }
+export function makeSdRequest(
+  payload: Record<string, string | number> | HTMLElement,
+  url = location.pathname,
+) {
+  const fd = toFormData(payload)
 
   return fetch(url, {
     method: 'POST',
-    body: new URLSearchParams(fd as unknown as string),
+    body: new URLSearchParams(fd as unknown as undefined),
   }).then(resolveDocument)
+}
+
+function toFormData(payload: Record<string, string | number> | HTMLElement) {
+  if (!payload) throw new TypeError('Payload Required')
+
+  const formElem = document.querySelector<HTMLFormElement>('#form1') ?? undefined
+  return payload instanceof HTMLElement ?
+      new FormData(formElem, payload)
+    : Object.entries(payload).reduce(
+        (fd, [key, value]) => (fd.set(key, value.toString()), fd),
+        new FormData(formElem),
+      )
 }
 
 export function responseJson(res: Response) {

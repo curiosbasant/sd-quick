@@ -69,7 +69,7 @@ function getData(selects: Record<'session' | 'class' | 'section' | 'month', HTML
         month: selects.month.options[monthValue - 1].text.slice(0, 3), // make month shorter
         rows: scrapeTable('#ContentPlaceHolder1_footer2_gvattendence', doc).slice(1), // remove header
       })
-      promises.push(makeSdRequest(undefined, params).then(formatRows))
+      promises.push(makeSdRequest(params).then(formatRows))
     }
   }
 

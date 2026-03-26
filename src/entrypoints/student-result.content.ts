@@ -57,7 +57,7 @@ function getVerifiedStudentFormNames() {
 }
 
 async function getResultFor(studentPrintButtonName: string) {
-  const doc = await makeSdRequest(location.href, {
+  const doc = await makeSdRequest({
     [studentPrintButtonName]: 'Print Result',
   })
   // This is the printable content
