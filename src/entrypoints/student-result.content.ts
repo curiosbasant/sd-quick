@@ -1,6 +1,7 @@
-import { createButton, makeSdRequest, printContent } from '~/utils'
+import type { ContentScriptDefinition } from 'wxt'
+import { createButton, makeSdCachedRequest, printContent, processInParallel } from '~/utils'
 
-export default defineContentScript({
+export default {
   matches: ['https://rajshaladarpan.rajasthan.gov.in/*/AllStudentResult.aspx'],
   main(ctx) {
     const ui = createIntegratedUi(ctx, {
@@ -27,41 +28,47 @@ export default defineContentScript({
     // Call mount to add the UI to the DOM
     ui.autoMount()
   },
-})
+} satisfies ContentScriptDefinition
 
 async function handlePrintingAllResults() {
-  const formNames = getVerifiedStudentFormNames()
-  if (!formNames.length) return
+  const printResultButtons = getVerifiedStudentsPrintResultButton()
+  if (!printResultButtons.length) {
+    alert('Results are not available for this class!')
+    return
+  }
 
-  const promises = await Promise.allSettled(formNames.slice(0, 10).map(getResultFor))
+  const results = await processInParallel(printResultButtons, getResultFor)
   const contents: (Node | string)[] = []
-  for (const p of promises) {
-    if (p.status === 'fulfilled') {
-      contents.push(p.value)
-    }
+  for (const result of results) {
+    if (result.success) contents.push(result.data)
+  }
+  if (printResultButtons.length === contents.length) {
+    console.log('✅ All student results have been fetched successfully!')
+  } else {
+    console.log('❌ There is some problem in fetching all results')
   }
   printContent(...contents)
 }
 
-function getVerifiedStudentFormNames() {
+function getVerifiedStudentsPrintResultButton() {
   const trs = document.querySelectorAll('#ContentPlaceHolder1_grd_Student > tbody > tr:has(input)')
-  const formNames: string[] = []
+  const printResultButtons: [string, HTMLInputElement][] = []
   for (const tr of trs) {
     // Pick only verified students
     if (tr.children[7]?.textContent?.trim() !== 'Verified') continue
     const btn = tr.querySelector<HTMLInputElement>('input[type=submit]')
     if (!btn) continue
-    formNames.push(btn.name)
+    const studentSrNo = tr.children[5]?.textContent?.trim()
+    printResultButtons.push([`print_result-${studentSrNo}`, btn])
   }
-  return formNames
+
+  return printResultButtons
 }
 
-async function getResultFor(studentPrintButtonName: string) {
-  const doc = await makeSdRequest({
-    [studentPrintButtonName]: 'Print Result',
-  })
+async function getResultFor(key: string, printResultButton: HTMLInputElement) {
+  const doc = await makeSdCachedRequest(key, printResultButton)
   // This is the printable content
-  const div = doc.querySelector<HTMLDivElement>('#div_print6_10')
+  const div = doc.querySelector<HTMLDivElement>('.modal-body:has(table)')
   if (!div) return '<p>Session Out</p>'
 
   div.removeAttribute('id') // not necessary
