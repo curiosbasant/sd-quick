@@ -1,5 +1,4 @@
 import path from 'path'
-import { fileURLToPath } from 'url'
 
 /**
  * @typedef {import("@ianvs/prettier-plugin-sort-imports").PrettierConfig} PrettierConfig
@@ -31,7 +30,7 @@ const config = {
   importOrder: [
     '^(react/(.*)$)|^(react$)',
     '^(react-dom(.*)$)|^(react-native(.*)$)',
-    '^(expo(.*)$)|^(expo$)|^(next/(.*)$)|^(next$)',
+    '^(expo(.*)$)|^(expo$)|^(next/(.*)$)|^(next$)|^(wxt/(.*)$)|^(wxt$)',
     '<THIRD_PARTY_MODULES>',
     '',
     '^@sd/(.*)$',

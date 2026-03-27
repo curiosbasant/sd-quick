@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   autoIcons: {
-    grayscaleOnDevelopment: false,
+    developmentIndicator: false,
   },
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {
