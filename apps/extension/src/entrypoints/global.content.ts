@@ -1,6 +1,7 @@
 import '~/assets/tailwind.css'
 
 import type { ContentScriptContext } from 'wxt/utils/content-script-context'
+
 import { createButton, getCurrentSdSegment, setFavicon } from '~/utils'
 
 export default defineContentScript({
@@ -14,6 +15,8 @@ export default defineContentScript({
       const isBlankPage = document.body.children.length === 0
       if (isBlankPage) {
         handleBlankPages(ctx)
+      } else if (document.querySelector('h1')?.textContent.startsWith('Server Error')) {
+        handlePopupLogin()
       } else {
         setSessionRefreshInterval(ctx)
         prePopulateFormValues(ctx)
