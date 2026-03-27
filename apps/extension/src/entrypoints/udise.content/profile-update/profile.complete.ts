@@ -1,9 +1,9 @@
 import { randomBetween, sleep } from '~/utils'
+import { getShalaDarpanStudent, getUdiseStudent } from '../utils'
 import { completeStudentGeneralProfile } from './profile.step-1'
 import { completeStudentEnrolmentProfile } from './profile.step-2'
 import { completeStudentFacilityProfile } from './profile.step-3'
 import { completeStudentProfilePreview, completeStudentVocationalProfile } from './profile.step-4'
-import { getShalaDarpanStudent, getUdiseStudent } from '../utils'
 
 export async function completeStudentProfile(pen: string, tr?: HTMLTableRowElement) {
   try {

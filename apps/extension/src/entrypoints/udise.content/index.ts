@@ -1,4 +1,5 @@
 import type { ContentScriptDefinition } from 'wxt'
+
 import { handleProfileUpdate } from './profile-update'
 
 export default {
@@ -6,7 +7,7 @@ export default {
   main(ctx) {
     checkUrlHash(location.hash)
 
-    ctx.addEventListener(window, 'wxt:locationchange', ({ oldUrl, newUrl }) => {
+    ctx.addEventListener(window, 'wxt:locationchange', ({ newUrl }) => {
       checkUrlHash(newUrl.hash)
     })
   },
