@@ -1,3 +1,14 @@
+import type { ReactNode } from 'react'
+import { createRoot } from 'react-dom/client'
+
+export function mountWithReact(children: ReactNode) {
+  return (wrapper: Element) => {
+    const root = createRoot(wrapper)
+    root.render(children)
+    return root
+  }
+}
+
 export function observeElementPresence<Result extends Element>(options: {
   /** To get the element from the @link{target} */
   selector: string
@@ -143,8 +154,8 @@ export function getCurrentSdSegment() {
 
 export function scrapeTable(selector: string, doc = document) {
   const rows = doc.querySelectorAll<HTMLTableRowElement>(selector + ' tr')
-  return [...rows].map((tr) =>
-    [...tr.children].map((td) =>
+  return Array.from(rows, (tr) =>
+    Array.from(tr.children, (td) =>
       td.firstElementChild?.matches('select, input') ?
         (td.firstElementChild as HTMLInputElement).value
       : td.textContent?.trim() || '',
