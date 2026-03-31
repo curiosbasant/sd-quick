@@ -20,9 +20,9 @@ export default defineContentScript({
             const rows = document.querySelectorAll<HTMLTableRowElement>(
               '#ContentPlaceHolder1_grdStudentProfile tr',
             )
-            const csvContent = [...rows]
-              .map((tr) => [...tr.children].map((td) => td.textContent?.trim()).join(','))
-              .join('\n')
+            const csvContent = Array.from(rows, (tr) =>
+              Array.from(tr.children, (td) => td.textContent?.trim()).join(','),
+            ).join('\n')
 
             downloadFile(csvContent, 'students-profile.csv')
           },
@@ -52,10 +52,7 @@ function handlePrint(ev: MouseEvent) {
   const content = document.querySelector('#dvReport')?.cloneNode(true) as HTMLDivElement
   if (!content) return
 
-  // Add a space so to better wrap in a new line
-  content.querySelector('#ContentPlaceHolder1_grdStudentProfile th')?.replaceChildren('Sr. No.')
-
-  // remove unnecessary elements
+  // remove unnecessary elements at footer
   const spares = content.querySelector('#ContentPlaceHolder1_Div1')
   if (spares) {
     spares.previousElementSibling?.remove()
@@ -92,6 +89,45 @@ function handlePrint(ev: MouseEvent) {
     }
   `
 
+  const tRows = content.querySelectorAll<HTMLTableRowElement>(
+    '#ContentPlaceHolder1_grdStudentProfile tbody tr',
+  )
+
+  for (const row of tRows) {
+    // remove OoSC Status
+    row.children[1].remove()
+    if (row.rowIndex % 2 === 0) {
+      row.style.backgroundColor = '#eeeeef'
+    }
+  }
+
+  const table = content.querySelector<HTMLTableElement>('#ContentPlaceHolder1_grdStudentProfile')
+  const headerRow = table?.firstElementChild?.firstElementChild
+  if (headerRow) {
+    const thead = document.createElement('thead')
+    thead.appendChild(headerRow)
+    table.prepend(thead)
+
+    const [serialNo, srNo, nicId, studentName, fName, mName, category, gender, dob, mobileNo] =
+      headerRow.children as unknown as HTMLTableCellElement[]
+    serialNo.removeAttribute('style')
+    serialNo.textContent = 'Sr. No.'
+    srNo.removeAttribute('style')
+    nicId.removeAttribute('style')
+    nicId.textContent = 'NIC Id'
+    studentName.style.width = '33%'
+    studentName.textContent = 'Student Name'
+    fName.style.width = '33%'
+    fName.textContent = 'Father Name'
+    mName.style.width = '33%'
+    mName.textContent = 'Mother Name'
+    category.removeAttribute('style')
+    category.textContent = 'Category'
+    gender.removeAttribute('style')
+    dob.removeAttribute('style')
+    mobileNo.removeAttribute('style')
+  }
+
   // remove high specificity styling
   content
     .querySelectorAll(
@@ -113,14 +149,22 @@ function handlePrint(ev: MouseEvent) {
   const printPopup = window.open(
     '',
     '',
-    'left=100,top=50,width=750,height=1000,toolbar=0,scrollbars=0,status=0',
+    'left=100,top=50,width=1200,height=1000,toolbar=0,scrollbars=0,status=0',
   )
   if (printPopup) {
-    printPopup.document.write(content.innerHTML)
+    printPopup.document.writeln(content.innerHTML)
+    // remove header and empty bottom row count
+    printPopup.document.body.style.zoom = calculateZoom(tRows.length - 2).toString()
     printPopup.document.close()
     printPopup.focus()
     printPopup.print()
     // avoid closing the popup, if pressed Shift key
     ev.shiftKey || printPopup.close()
   }
+}
+
+function calculateZoom(count: number): number {
+  if (count < 35) return 0.8
+  const rem = count - 34
+  return rem > 6 ? calculateZoom(rem) : 0.8 - rem / 60
 }
