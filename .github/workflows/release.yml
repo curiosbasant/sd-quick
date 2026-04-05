@@ -1,6 +1,8 @@
 name: Release
 
 on:
+  workflow_dispatch:
+
   push:
     branches: [main]
 
@@ -20,8 +22,8 @@ jobs:
             - args: [--frozen-lockfile]
       - uses: actions/setup-node@v4
         with:
-          node-version: '>=20.11'
-          cache: 'pnpm'
+          node-version: ">=20.11"
+          cache: pnpm
 
       # Prepare for github release with the zipped artifact
       - name: Create Release
