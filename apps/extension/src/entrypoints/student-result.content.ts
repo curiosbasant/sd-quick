@@ -1,4 +1,5 @@
 import type { ContentScriptDefinition } from 'wxt'
+
 import { createButton, makeSdCachedRequest, printContent, processInParallel } from '~/utils'
 
 export default {
@@ -10,12 +11,12 @@ export default {
       anchor: '#ContentPlaceHolder1_grd_Student tr:nth-child(2)',
       onMount: () => {
         const printButton = createButton({
-          className: 'btn btn-primary',
+          className:
+            'btn btn-primary tw:flex tw:gap-1 tw:items-center tw:border-transparent tw:outline-none',
           onClick: handlePrintingAllResults,
         })
-        printButton.setAttribute('style', 'border-color:transparent;outline:none')
         printButton.innerHTML =
-          '<div><img src="Content/images/Print.png" title="Print"> Print All Results</div>'
+          '<img src="Content/images/Print.png" title="Print"> Print All Results'
         document.getElementById('ContentPlaceHolder1_divlist')?.prepend(printButton)
         return printButton
       },
@@ -37,7 +38,7 @@ async function handlePrintingAllResults() {
     return
   }
 
-  const results = await processInParallel(printResultButtons, getResultFor)
+  const results = await processInParallel(printResultButtons, (arg) => getResultFor(...arg))
   const contents: (Node | string)[] = []
   for (const result of results) {
     if (result.success) contents.push(result.data)

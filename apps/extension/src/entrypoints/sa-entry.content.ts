@@ -142,7 +142,7 @@ function handleAutoFill() {
     }
   })
 
-  const formElements = document.querySelector<HTMLFormElement>('#form1')?.elements
+  const formElements = form1?.elements
   if (!formElements) return alert('form1 not found')
 
   const selectedValue = document.querySelector<HTMLSelectElement>('#ContentPlaceHolder1_ddlsa')

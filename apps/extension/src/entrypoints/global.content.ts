@@ -84,22 +84,24 @@ function handlePopupLogin() {
 }
 
 function setSessionRefreshInterval(ctx: ContentScriptContext) {
-  let intervalId = 0
+  let intervalId = 0,
+    idleCallbackId = 0
   const signalObj = { signal: ctx.signal }
   // refresh every 5 minutes to avoid session timeout
   const handleOnline = () => {
     intervalId = window.setInterval(
       () => {
-        requestIdleCallback(
-          () => fetch(`${getCurrentSdSegment()}/Home/School/Home_New.aspx`, signalObj),
+        idleCallbackId = requestIdleCallback(
+          () => void fetch('Home_New.aspx', signalObj),
           { timeout: 5 * 1000 }, // 5sec
         )
       },
-      5 * 60 * 1000,
-    ) // 5min
+      5 * 60 * 1000, // 5min
+    )
   }
   const handleOffline = () => {
     clearInterval(intervalId)
+    cancelIdleCallback(idleCallbackId)
   }
 
   if (navigator.onLine) handleOnline()
@@ -121,14 +123,14 @@ function prePopulateFormValues(ctx: ContentScriptContext) {
         const oldValue = elem.value
         elem.value = value
         // Add the outline if value successfully set, otherwise reset value
-        if (elem.value === value)
+        if (elem.value === value) {
           elem.classList.add(
             'tw:outline',
             'tw:outline-pink-400',
             'tw:outline-offset-2',
             'tw:rounded-xs',
           )
-        else {
+        } else {
           elem.value = oldValue
         }
       }
@@ -153,7 +155,7 @@ function prePopulateFormValues(ctx: ContentScriptContext) {
 
 function addGlobalStyles() {
   // Align stars in a row
-  document.querySelector('#UpdatePanel1')?.classList.add('tw:**:has-[>#lblSchoolStar]:flex')
+  document.querySelector('#UpdatePanel1 div:has(>img)')?.classList.add('tw:flex')
 
   // Prevent annoying login page always being opening in new tab
   document.querySelectorAll('.loginMenu .dropdown-item').forEach((a) => a.removeAttribute('target'))

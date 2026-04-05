@@ -11,12 +11,12 @@ export default {
       anchor: '#ContentPlaceHolder1_grdStudent_1 tr:nth-child(2)',
       onMount: () => {
         const downloadButton = createButton({
-          className: 'btn btn-primary',
+          className:
+            'btn btn-primary tw:flex tw:gap-1 tw:items-center tw:border-transparent tw:outline-none',
           onClick: handlePrintingAllResults,
         })
-        downloadButton.setAttribute('style', 'border-color:transparent;outline:none')
         downloadButton.innerHTML =
-          '<div><img src="Content/images/Print.png" title="Print"> Download All Results</div>'
+          '<img src="Content/images/Print.png" title="Print"> Download All Results'
         document
           .querySelector('.row.form-group:has(#ContentPlaceHolder1_grdStudent_1)')
           ?.insertAdjacentElement('beforebegin', downloadButton)

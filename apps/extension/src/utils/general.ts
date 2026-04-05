@@ -7,10 +7,10 @@ export function sleep(delay = 1000) {
   return new Promise((r) => setTimeout(r, delay))
 }
 
-export async function processInParallel<TPayload extends any[], TResult>(
+export async function processInParallel<TPayload, TResult>(
   payloads: TPayload[],
-  callback: (...payload: TPayload) => Promise<TResult>,
-  { concurrency = 5, retries = 3 } = {},
+  callback: (payload: TPayload) => Promise<TResult>,
+  { concurrency = 5, retries = 3, delay = 250 } = {},
 ) {
   const results: (
     | { success: true; data: TResult }
@@ -19,11 +19,11 @@ export async function processInParallel<TPayload extends any[], TResult>(
 
   const withRetry = async (payload: TPayload, index: number, attempt = 0) => {
     try {
-      const data = await callback(...payload)
+      const data = await callback(payload)
       results[index] = { success: true, data }
     } catch (error) {
       if (attempt < retries) {
-        await sleep(250)
+        await sleep(delay)
         return withRetry(payload, index, attempt + 1)
       }
       results[index] = { success: false, payload, error }

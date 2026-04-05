@@ -43,12 +43,11 @@ export function makeSdRequest(
 function toFormData(payload: Record<string, string | number> | HTMLElement) {
   if (!payload) throw new TypeError('Payload Required')
 
-  const formElem = document.querySelector<HTMLFormElement>('#form1') ?? undefined
   return payload instanceof HTMLElement ?
-      new FormData(formElem, payload)
+      new FormData(form1, payload)
     : Object.entries(payload).reduce(
         (fd, [key, value]) => (fd.set(key, value.toString()), fd),
-        new FormData(formElem),
+        new FormData(form1),
       )
 }
 
