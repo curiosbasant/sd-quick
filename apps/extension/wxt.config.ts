@@ -39,7 +39,7 @@ export default defineConfig({
   },
   zip: {
     // Zipped file name
-    artifactTemplate: '{{name}}-v{{version}}-{{browser}}.zip',
+    artifactTemplate: 'sd-quick-v{{version}}-{{browser}}.zip',
     zipSources: false,
   },
 })
