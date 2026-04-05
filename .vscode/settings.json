@@ -13,7 +13,7 @@
   "tailwindCSS.classFunctions": ["(.+).classList.(add|remove)", "cn", "cx", "tv"],
   "tailwindCSS.experimental.classRegex": [["className ?\\=([^;]*)", "'([^']*)'"]],
   "tailwindCSS.experimental.configFile": {
-    "apps/extenstion/src/assets/tailwind.css": "apps/extenstion/src/entrypoints/*.content.ts",
+    "apps/extension/src/assets/tailwind.css": "apps/extension/src/entrypoints/**",
     "apps/mobile/src/styles.css": "apps/mobile/src/**/*.tsx"
   }
 }

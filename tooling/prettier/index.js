@@ -48,11 +48,11 @@ const config = {
 
   overrides: [
     {
-      files: 'apps/extention/**',
+      files: 'apps/extension/**',
       options: {
         tailwindStylesheet: path.join(
           import.meta.dirname,
-          '../../apps/extention/src/assets/tailwind.css',
+          '../../apps/extension/src/assets/tailwind.css',
         ),
       },
     },
